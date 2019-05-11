@@ -1,0 +1,2 @@
+include ':app', ':AutoTrackSdk'
+rootProject.name='AutoTrack'
