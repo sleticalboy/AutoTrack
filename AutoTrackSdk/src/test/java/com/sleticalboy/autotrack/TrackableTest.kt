@@ -1,9 +1,5 @@
 package com.sleticalboy.autotrack
 
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
-
 /**
  * Created on 19-5-8.
  *
@@ -13,7 +9,7 @@ class TrackableTest {
 
     private var trackable: Trackable? = null
 
-    @Before
+    // @Before
     fun setUp() {
         trackable = object : Trackable() {
             override fun path(): CharSequence {
@@ -31,12 +27,12 @@ class TrackableTest {
         }
     }
 
-    @After
+    // @After
     fun tearDown() {
         trackable = null
     }
 
-    @Test
+    // @Test
     fun formatTest() {
         println(trackable)
     }

@@ -56,8 +56,7 @@ public final class TrackSdk {
             @NotNull
             @Override
             public CharSequence title() {
-                final CharSequence title = ActivityHelper.getTitle(activity);
-                return title == null ? path() : title;
+                return ActivityHelper.getTitle(activity);
             }
 
             @NotNull
@@ -75,15 +74,15 @@ public final class TrackSdk {
         trackInner(new ClickInfo() {
             @NotNull
             @Override
-            public String path() {
+            public CharSequence path() {
                 return ViewHelper.findViewPath(widget);
             }
 
             @NotNull
             @Override
-            public String desc() {
+            public CharSequence desc() {
                 // 类名 + 文字(如果有)
-                return widget.getClass().getSimpleName();
+                return ViewHelper.getWidgetDesc(widget);
             }
         });
     }

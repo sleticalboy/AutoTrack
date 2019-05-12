@@ -9,16 +9,12 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.lang.ref.Reference;
-
 /**
  * Created on 19-5-11.
  *
  * @author leebin
  */
 public final class ActivityHelper {
-
-    private static Reference<Activity> sTopRef;
 
     private ActivityHelper() {
         throw new AssertionError();
@@ -40,7 +36,7 @@ public final class ActivityHelper {
     }
 
     public static CharSequence getTitle(@NonNull Activity page) {
-        CharSequence title = page.getTitle();
+        CharSequence title;
         try {
             title = getToolbarTitle(page);
             if (title == null) {
@@ -48,7 +44,7 @@ public final class ActivityHelper {
                 title = pkgMgr.getActivityInfo(page.getComponentName(), 0).loadLabel(pkgMgr);
             }
         } catch (PackageManager.NameNotFoundException e) {
-            return null;
+            return page.getClass().getSimpleName();
         }
         return title;
     }

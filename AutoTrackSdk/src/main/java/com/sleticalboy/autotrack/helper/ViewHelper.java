@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import com.sleticalboy.autotrack.data.ViewNode;
 import com.sleticalboy.autotrack.data.ViewStack;
@@ -17,8 +19,6 @@ import com.sleticalboy.autotrack.data.ViewStack;
 public final class ViewHelper {
 
     private static final char SPACE = ' ';
-    private static ViewStack sViewStack;
-    private static final View[] sDecorHolder = new View[1];
 
     public static String findViewPath(@NonNull View view) {
         final long start = SystemClock.uptimeMillis();
@@ -33,8 +33,9 @@ public final class ViewHelper {
         // ViewNode: cls declaredId index next
         // VewStack: head
         // DecorView->FrameLayout->ListView$3$lv_movie->TextView$5$tv_title
-        collectViews(view);
-        sb.append("$$").append(sViewStack.toString()).append("$$");
+        final ViewStack viewStack = new ViewStack();
+        collectViews(view, viewStack, WindowHelper.findDecorView(view));
+        sb.append("$$").append(viewStack.toString()).append("$$");
         sb.append("search_time: ").append(SystemClock.uptimeMillis() - start).append(" ms");
         // HomeActivity$$FrameLayout$0->RecycleView$2$rv_movies->ConstraintLayout$20$movie_item_constraint->
         // ImageView$0$move_icon$$search_time: xx ms
@@ -46,36 +47,16 @@ public final class ViewHelper {
         return sb.toString();
     }
 
-    private static void collectViews(@NonNull View target) {
-        if (sViewStack == null) {
-            final View decorView = WindowHelper.findDecorView(target);
-            synchronized (sDecorHolder) {
-                setup(decorView);
-            }
-        }
+    private static void collectViews(View target, ViewStack stack, View decorView) {
         // DecorView 有压栈的必要么???
-        sViewStack.push(createNode(target));
-        if (target == sDecorHolder[0]) {
-            synchronized (sDecorHolder) {
-                tearDown();
-            }
+        stack.push(createNode(target));
+        if (target == decorView) {
             return;
         }
         if (target.getParent() instanceof ViewGroup) {
             // 递归查找
-            collectViews((View) target.getParent());
+            collectViews((View) target.getParent(), stack, decorView);
         }
-    }
-
-    private static void setup(View decorView) {
-        sViewStack = new ViewStack();
-        sDecorHolder[0] = decorView;
-    }
-
-    private static void tearDown() {
-        sViewStack.clear();
-        sViewStack = null;
-        sDecorHolder[0] = null;
     }
 
     private static ViewNode createNode(View view) {
@@ -140,5 +121,16 @@ public final class ViewHelper {
      */
     private static boolean isViewIdGenerated(int id) {
         return (id & 0xFF000000) == 0 && (id & 0x00FFFFFF) != 0;
+    }
+
+    public static CharSequence getWidgetDesc(@NonNull View target) {
+        final String prefix = target.getClass().getSimpleName();
+        CharSequence desc = "";
+        if (target instanceof TextView) {
+            desc = ((TextView) target).getText();
+        } else if (target instanceof ImageView) {
+            desc = target.getContentDescription();
+        }
+        return prefix + " " + desc;
     }
 }

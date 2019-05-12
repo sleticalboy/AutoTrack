@@ -4,9 +4,9 @@ abstract class ClickInfo : Trackable() {
 
     override fun label(): CharSequence = desc()
 
-    abstract fun desc(): String
+    abstract fun desc(): CharSequence
 
-    override fun type(): String {
+    override fun type(): CharSequence {
         return "WidgetClick"
     }
 }
