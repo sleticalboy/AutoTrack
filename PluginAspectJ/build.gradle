@@ -1,0 +1,24 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+}
+
+repositories {
+    mavenCentral()
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        // local repo
+        repository(url: uri("$rootDir/repo"))
+        // groupId
+        pom.groupId = 'com.sleticalboy'
+        // artifactId
+        pom.artifactId = 'autotrack.android'
+        // plugin version
+        pom.version = '1.0.1'
+    }
+}
