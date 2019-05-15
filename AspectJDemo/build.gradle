@@ -57,9 +57,6 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.google.android.material:material:1.0.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
     // AspectJ
     implementation 'org.aspectj:aspectjrt:1.9.0'
@@ -69,10 +66,10 @@ final def tag = "AutoTrack "
 
 project.android.applicationVariants.all { it ->
     if (!it.buildType.isDebuggable()) {
-        println(tag + "Skipping non-debuggable build type '${it.buildType.name}'.")
+        project.logger.warn(tag + "Skipping non-debuggable build type '${it.buildType.name}'.")
         return
     }
-    logger.debug(tag + "Start building '${it.buildType.name}'.")
+    project.logger.debug(tag + "Start building '${it.buildType.name}'.")
     JavaCompile jc = it.javaCompile
     jc.doLast {
         final String[] args = [
@@ -83,7 +80,7 @@ project.android.applicationVariants.all { it ->
                 "-classpath", jc.classpath.asPath,
                 "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator)
         ]
-        println(tag + "ajc args: " + Arrays.toString(args))
+        project.logger.info(tag + "ajc args: " + Arrays.toString(args))
         final MessageHandler handler = new MessageHandler(true)
         new Main().run(args, handler)
         handler.getMessages(null, true).each {

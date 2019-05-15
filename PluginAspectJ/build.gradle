@@ -4,12 +4,14 @@ apply plugin: 'maven'
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
+
 }
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
+// 如何发布到远程仓库 https://www.jianshu.com/p/376ae605ebf1
 uploadArchives {
     repositories.mavenDeployer {
         // local repo
