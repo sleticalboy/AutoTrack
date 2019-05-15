@@ -1,0 +1,26 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation 'com.android.tools.build:gradle:3.5.0-beta01'
+}
+
+repositories {
+    jcenter()
+}
+
+// 如何发布到远程仓库 https://www.jianshu.com/p/376ae605ebf1
+uploadArchives {
+    repositories.mavenDeployer {
+        // local repo
+        repository(url: uri("$rootDir/repo"))
+        // groupId
+        pom.groupId = 'com.sleticalboy'
+        // artifactId
+        pom.artifactId = 'autotrack.transform'
+        // plugin version
+        pom.version = '1.0.0'
+    }
+}

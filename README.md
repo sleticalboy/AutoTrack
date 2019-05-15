@@ -25,6 +25,7 @@ xxx/src
 // 关于 xxx.properties 内容
 implementation-class=插件类的全路径 (不要有任何多余的字符!!)
 ```
+- 每次更改完插件，如果用的是 local repo，需要把引用的地方先注释掉，然后重新上传，
 
 ## ASM
 
