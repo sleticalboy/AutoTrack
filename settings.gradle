@@ -1,2 +1,4 @@
-include ':app', ':AutoTrackSdk', ':AspectJDemo', ':PluginAspectJ', ':PluginTransform', ':TransformDemo'
+include ':AutoTrackSdk',
+        /* ':AspectJDemo', ':PluginAspectJ',*/
+        ':PluginTransform', ':TransformDemo'
 rootProject.name='AutoTrack'

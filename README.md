@@ -29,6 +29,11 @@ implementation-class=插件类的全路径 (不要有任何多余的字符!!)
 
 ## ASM
 
+### 自定义 Transform
+
+- com.android.build.api.transform.TransformException: java.util.zip.ZipException: error in opening zip file
+    - stream 忘记 close 了
+
 ## Javassist
 
 ## AST

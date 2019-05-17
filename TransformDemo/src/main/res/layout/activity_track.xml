@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp">
+
+    <Button
+        android:id="@+id/normalClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="normal click"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <Button
+        android:id="@+id/xmlClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="xmlClick"
+        android:text="xml click"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/lambdaClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="xmlClick"
+        android:text="lambda click"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <CheckBox
+        android:id="@+id/cbNormal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="cb normal"
+        app:layout_constraintBottom_toTopOf="@+id/lambdaClick"
+        app:layout_constraintLeft_toLeftOf="@+id/lambdaClick" />
+
+    <CheckBox
+        android:id="@+id/cbLambda"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="cb lambda"
+        app:layout_constraintBottom_toTopOf="@+id/normalClick"
+        app:layout_constraintLeft_toLeftOf="@+id/normalClick" />
+
+    <ImageView
+        android:id="@+id/showDialog"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintBottom_toTopOf="@+id/xmlClick"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

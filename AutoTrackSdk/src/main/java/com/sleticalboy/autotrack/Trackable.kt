@@ -87,7 +87,7 @@ abstract class Trackable {
     /**
      * 当是控件点击事件的时候启用
      */
-    abstract fun path(): CharSequence
+    abstract fun path(): CharSequence?
 
     fun format(): String {
         val map = HashMap<String, Any>()

@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -126,7 +127,9 @@ public final class ViewHelper {
     public static CharSequence getWidgetDesc(@NonNull View target) {
         final String prefix = target.getClass().getSimpleName();
         CharSequence desc = "";
-        if (target instanceof TextView) {
+        if (target instanceof CompoundButton) {
+            desc = ((CompoundButton) target).getText() + ", isChecked: " + ((CompoundButton) target).isChecked();
+        } else if (target instanceof TextView) {
             desc = ((TextView) target).getText();
         } else if (target instanceof ImageView) {
             desc = target.getContentDescription();
