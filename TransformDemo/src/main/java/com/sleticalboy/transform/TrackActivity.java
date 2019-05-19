@@ -2,7 +2,9 @@ package com.sleticalboy.transform;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -19,16 +21,16 @@ public class TrackActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track);
-        // 测试通过
+        // 普通点击事件 测试通过
         findViewById(R.id.normalClick).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toast("normal click");
             }
         });
-        // 测试通过
+        // lambda 表达式添加点击事件 测试通过
         findViewById(R.id.lambdaClick).setOnClickListener(v -> toast("lambda click"));
-        // 测试通过
+        // CheckBox 点击事件 测试通过
         ((CheckBox) findViewById(R.id.cbNormal)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -39,7 +41,15 @@ public class TrackActivity extends AppCompatActivity {
         ((CheckBox) findViewById(R.id.cbLambda)).setOnCheckedChangeListener((view, isChecked) -> {
             toast("cb lambda checked");
         });
+        // 测试通过
         findViewById(R.id.showDialog).setOnClickListener(v -> createDialog());
+
+        // 动态添加 View
+        findViewById(R.id.dynamicAdd).setOnClickListener(v -> dynamicAddView());
+    }
+
+    private void dynamicAddView() {
+        final LinearLayout ll = findViewById(R.id.dynamicContainer);
         final ListView listView = new ListView(this);
         listView.setOnItemClickListener((parent, view, position, id) -> {
         });
@@ -49,6 +59,30 @@ public class TrackActivity extends AppCompatActivity {
                 //
             }
         });
+        ll.removeAllViews();
+        final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.weight = 1;
+        params.gravity = Gravity.CENTER_VERTICAL;
+        for (int i = 0; i < 3; i++) {
+            final Button child = new Button(this);
+            child.setAllCaps(false);
+            child.setText("Button " + i);
+            // 普通匿名内部类可以添加埋点代码，测试通过
+            if (i % 2 == 0) {
+                child.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toast("this is " + child.getText());
+                    }
+                });
+            } else {
+                // lambda 表达式可以添加埋点代码，测试通过
+                child.setOnClickListener(v -> {
+                    toast("this is " + child.getText());
+                });
+            }
+            ll.addView(child, i, params);
+        }
     }
 
     private void createDialog() {

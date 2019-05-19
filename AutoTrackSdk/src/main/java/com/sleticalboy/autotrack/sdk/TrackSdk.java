@@ -71,7 +71,6 @@ public final class TrackSdk {
 
     private static void onClickMenuItem(Activity activity, MenuItem item) {
         final View view = item.getActionView();
-        Log.d(TAG, "onClickMenuItem() activity:" + activity);
         trackInner(new ClickInfo() {
             @Override
             public CharSequence desc() {
