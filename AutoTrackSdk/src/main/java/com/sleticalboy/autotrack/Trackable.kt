@@ -1,10 +1,8 @@
 package com.sleticalboy.autotrack
 
 import android.os.Build
-import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
 
 /**
  * Created on 19-5-8.
@@ -89,25 +87,9 @@ abstract class Trackable {
      */
     abstract fun path(): CharSequence?
 
-    fun format(): String {
-        val map = HashMap<String, Any>()
-        map["sdk_version"] = sdkVersion()
+    override fun toString(): String = toJson()
 
-        map["label"] = label()
-        map["event_type"] = type()
-        map["event_time"] = dataFormat.format(System.currentTimeMillis())
-
-        map["app_name"] = appName as String
-        map["app_version"] = appVersion as String
-        map["os"] = os() + " " + osVersion + " api " + apiVersion()
-
-        map["model"] = model()
-        map["manufacture"] = manufacture()
-        map["screen_size"] = screenHeight.toString() + "x" + screenWidth
-        return JSONObject(map).toString()
-    }
-
-    override fun toString(): String {
+    fun toJson(): String {
         val sb = StringBuilder("{")
         sb.append("\"sdk_info\":\"").append(sdkVersion()).append("\",")
 

@@ -29,5 +29,6 @@ public final class AutoTrack {
                 TrackSdk.autoTrack(activity);
             }
         });
+        TrackSdk.prepare();
     }
 }
