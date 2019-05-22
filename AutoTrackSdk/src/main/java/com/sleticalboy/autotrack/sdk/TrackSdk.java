@@ -30,9 +30,13 @@ public final class TrackSdk {
     private static final int MSG_TRACK = 1;
     private static Handler sTrackHandler;
 
+    private TrackSdk() {
+        throw new AssertionError("Utility class can not be initialized");
+    }
+
     public static void prepare() {
         if (sTrackHandler != null) {
-            throw new UnsupportedOperationException("TrackSdk.prepare() has already been prepared.");
+            throw new UnsupportedOperationException("TrackSdk has already been prepared.");
         }
         final HandlerThread trackThread = new HandlerThread("TrackThread");
         trackThread.start();
@@ -41,27 +45,27 @@ public final class TrackSdk {
 
     @SuppressWarnings("UsedForASM")
     public static void autoTrack(Object obj) {
-        sendTrackMessage(new WrappedItem(obj, NULL, NULL, NULL));
+        sendTrackMessage(new SomeArgs(obj, NULL, NULL, NULL));
     }
 
     @SuppressWarnings("UsedForASM")
     public static void autoTrack(Object obj, MenuItem menuItem) {
-        sendTrackMessage(new WrappedItem(obj, menuItem, NULL, NULL));
+        sendTrackMessage(new SomeArgs(obj/*Context*/, menuItem, NULL, NULL));
     }
 
     @SuppressWarnings("UsedForASM")
     public static void autoTrack(DialogInterface dialog, int which) {
-        sendTrackMessage(new WrappedItem(dialog, which, NULL, NULL));
+        sendTrackMessage(new SomeArgs(dialog, which, NULL, NULL));
     }
 
     @SuppressWarnings("UsedForASM")
     public static void autoTrack(AdapterView adapterView, View view, int position) {
-        sendTrackMessage(new WrappedItem(adapterView, view, position, NULL));
+        sendTrackMessage(new SomeArgs(adapterView, view, position, NULL));
     }
 
     @SuppressWarnings("UsedForASM")
     public static void autoTrack(DialogInterface dialog, int which, boolean isChecked) {
-        sendTrackMessage(new WrappedItem(dialog, which, isChecked, NULL));
+        sendTrackMessage(new SomeArgs(dialog, which, isChecked, NULL));
     }
 
     private static void onClickMenuItem(Activity activity, MenuItem item) {
@@ -117,7 +121,7 @@ public final class TrackSdk {
         });
     }
 
-    private static void sendTrackMessage(WrappedItem item) {
+    private static void sendTrackMessage(SomeArgs item) {
         if (sTrackHandler == null) {
             throw new IllegalThreadStateException("You must call TrackSdk.prepare() first.");
         }
@@ -131,9 +135,9 @@ public final class TrackSdk {
     private static void trackInternal(Object obj, Object arg1, Object arg2, Object arg3) {
         if (arg1 == NULL && arg2 == NULL && arg3 == NULL) {
             if (obj instanceof Activity) {
-                onPageView((Activity) obj);
+                onPageView((Activity) obj/*activity*/);
             } else if (obj instanceof View) {
-                onClick(((View) obj));
+                onClick((View) obj/*view*/);
             }
         } else if (arg2 == NULL && arg3 == NULL) {
             if (obj instanceof DialogInterface && arg1 instanceof Integer) {
@@ -143,6 +147,7 @@ public final class TrackSdk {
                 } else if (obj instanceof android.app.AlertDialog) {
                     text = ((android.app.AlertDialog) obj).getButton((Integer) arg1).getText();
                 }
+                // onClickDialogButton((DialogInterface) obj/*dialog*/, (Integer) arg1/*which*/);
                 Log.d(TAG, "onClickDialogButton() called with: dialog = [" + obj + "], which = [" + arg1 + "], text = [" + text + ']');
             } else if (arg1 instanceof MenuItem) {
                 onClickMenuItem(ActivityHelper.findActivity(obj), (MenuItem) arg1);
@@ -150,6 +155,7 @@ public final class TrackSdk {
         } else if (arg3 == NULL) {
             if (obj instanceof AdapterView && arg1 instanceof View && arg2 instanceof Integer) {
                 final Object item = ((AdapterView) obj).getAdapter().getItem((Integer) arg2);
+                // onClickAdapterViewItem((AdapterView) obj/*adapterVew*/, (View) arg1, (Integer) arg2/*position*/);
                 Log.d(TAG, "onClickAdapterViewItem() called with: parent = [" + obj + "], view = [" + arg1 + "], position = [" + arg2 + "], item = [" + item + ']');
             } else if (obj instanceof DialogInterface && arg1 instanceof Integer && arg2 instanceof Boolean) {
                 Object item = null;
@@ -158,35 +164,46 @@ public final class TrackSdk {
                 } else if (obj instanceof android.app.AlertDialog) {
                     item = ((android.app.AlertDialog) obj).getListView().getAdapter().getItem((Integer) arg1);
                 }
+                // onClickDialogItem((DialogInterface) obj/*dialog*/, (Integer) arg1/*which*/, (Boolean) arg2/*isChecked*/);
                 Log.d(TAG, "onClickDialogItem() called with: dialog = [" + obj + "], which = [" + arg1 + "], item = [" + item + "], isChecked = [" + arg2 + "]");
             }
         }
     }
 
-    private static class TrackCallback implements Handler.Callback {
+    private static final class TrackCallback implements Handler.Callback {
 
         @Override
         public boolean handleMessage(Message msg) {
-            if (msg.what == MSG_TRACK && msg.obj instanceof WrappedItem) {
-                final WrappedItem item = (WrappedItem) msg.obj;
+            if (msg.what == MSG_TRACK && msg.obj instanceof SomeArgs) {
+                final SomeArgs item = (SomeArgs) msg.obj;
                 trackInternal(item.obj, item.arg1, item.arg2, item.arg3);
             }
             return true;
         }
     }
 
-    private static class WrappedItem {
+    private static final class SomeArgs {
 
         final Object obj;
         final Object arg1;
         final Object arg2;
         final Object arg3;
 
-        WrappedItem(Object obj, Object arg1, Object arg2, Object arg3) {
+        SomeArgs(Object obj, Object arg1, Object arg2, Object arg3) {
             this.obj = obj;
             this.arg1 = arg1;
             this.arg2 = arg2;
             this.arg3 = arg3;
+        }
+
+        @Override
+        public String toString() {
+            return "SomeArgs{" +
+                    "obj=" + obj +
+                    ", arg1=" + arg1 +
+                    ", arg2=" + arg2 +
+                    ", arg3=" + arg3 +
+                    '}';
         }
     }
 }

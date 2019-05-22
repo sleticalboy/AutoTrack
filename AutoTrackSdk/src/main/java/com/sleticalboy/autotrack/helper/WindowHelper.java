@@ -14,7 +14,7 @@ import android.view.Window;
 public final class WindowHelper {
 
     private WindowHelper() {
-        throw new AssertionError();
+        throw new AssertionError("Utility class can not be initialized");
     }
 
     public static Window findWindow(Object obj) {

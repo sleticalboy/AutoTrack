@@ -29,6 +29,10 @@ public final class ViewNode {
 
     @Override
     public String toString() {
+        return toFormatString();
+    }
+
+    private String toFormatString() {
         // type$index$declaredId
         return type + (index == -1 ? "" : "$" + index) + (declaredId == null ? "" : "$" + declaredId);
     }

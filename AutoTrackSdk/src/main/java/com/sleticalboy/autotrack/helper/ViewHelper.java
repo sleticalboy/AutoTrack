@@ -21,6 +21,10 @@ public final class ViewHelper {
 
     private static final char SPACE = ' ';
 
+    private ViewHelper() {
+        throw new AssertionError("Utility class can not be initialized");
+    }
+
     public static String findViewPath(@NonNull View view) {
         final long start = SystemClock.uptimeMillis();
         final StringBuilder sb = new StringBuilder();
@@ -49,7 +53,6 @@ public final class ViewHelper {
     }
 
     private static void collectViews(View target, ViewStack stack, View decorView) {
-        // DecorView 有压栈的必要么???
         stack.push(createNode(target));
         if (target == decorView) {
             return;

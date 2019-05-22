@@ -12,10 +12,10 @@ import com.sleticalboy.autotrack.sdk.TrackSdk;
  */
 public final class AutoTrack {
 
-    public static Application sApp;
+    private static Application sApp;
 
     private AutoTrack() {
-        throw new AssertionError();
+        throw new AssertionError("Utility class can not be initialized");
     }
 
     public static void init(@NonNull Application app) {
@@ -30,5 +30,13 @@ public final class AutoTrack {
             }
         });
         TrackSdk.prepare();
+    }
+
+    @NonNull
+    public static Application sharedApp() {
+        if (sApp == null) {
+            throw new IllegalStateException("You must call AutoTrack.init() first.");
+        }
+        return sApp;
     }
 }

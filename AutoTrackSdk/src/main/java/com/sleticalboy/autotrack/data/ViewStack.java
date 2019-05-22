@@ -78,10 +78,10 @@ public final class ViewStack {
     @NonNull
     @Override
     public String toString() {
-        return toStringSafely(this);
+        return toFormatString(this);
     }
 
-    private static String toStringSafely(ViewStack stack) {
+    private static String toFormatString(ViewStack stack) {
         // DecorView$0$android.internal.R.id.content
         // FrameLayout$1$fl_content
         // ListView$3$lv_movies

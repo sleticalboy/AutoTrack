@@ -11,12 +11,12 @@ import com.sleticalboy.autotrack.AutoTrack;
 public final class ResHelper {
 
     private ResHelper() {
-        throw new AssertionError();
+        throw new AssertionError("Utility class can not be initialized");
     }
 
     public static String getEntryName(int id) {
         try {
-            return AutoTrack.sApp.getResources().getResourceEntryName(id);
+            return AutoTrack.sharedApp().getResources().getResourceEntryName(id);
         } catch (Resources.NotFoundException e) {
             return null;
         }

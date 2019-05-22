@@ -25,17 +25,17 @@ public class KotlinTest {
     }
 
     private static void checkDeviceInfo() {
-        if (appName == null && AutoTrack.sApp != null) {
+        if (appName == null && AutoTrack.sharedApp() != null) {
             try {
-                appVersion = AutoTrack.sApp.getPackageManager()
-                        .getPackageInfo(AutoTrack.sApp.getPackageName(), 0).versionName;
+                appVersion = AutoTrack.sharedApp().getPackageManager()
+                        .getPackageInfo(AutoTrack.sharedApp().getPackageName(), 0).versionName;
             } catch (PackageManager.NameNotFoundException e) {
                 appVersion = "Unknown";
             }
         }
-        if (appName == null && AutoTrack.sApp != null) {
-            final int label = AutoTrack.sApp.getApplicationInfo().labelRes;
-            appName = AutoTrack.sApp.getString(label);
+        if (appName == null && AutoTrack.sharedApp() != null) {
+            final int label = AutoTrack.sharedApp().getApplicationInfo().labelRes;
+            appName = AutoTrack.sharedApp().getString(label);
         }
     }
 }

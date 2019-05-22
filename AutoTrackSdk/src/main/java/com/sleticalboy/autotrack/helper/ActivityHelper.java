@@ -17,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public final class ActivityHelper {
 
     private ActivityHelper() {
-        throw new AssertionError();
+        throw new AssertionError("Utility class can not be initialized");
     }
 
     public static Activity findActivity(Object obj) {

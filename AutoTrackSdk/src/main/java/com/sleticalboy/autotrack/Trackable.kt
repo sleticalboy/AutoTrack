@@ -23,19 +23,19 @@ abstract class Trackable {
         }
 
         private fun initDeviceInfo() {
+            val app = AutoTrack.sharedApp()
             if (appVersion == null) {
-                appVersion =
-                    AutoTrack.sApp?.packageManager?.getPackageInfo(AutoTrack.sApp?.packageName, 0)?.versionName
+                appVersion = app.packageManager?.getPackageInfo(app.packageName, 0)?.versionName
             }
             if (appName == null) {
-                val label: Int? = AutoTrack.sApp?.applicationInfo?.labelRes
-                appName = label?.let { AutoTrack.sApp?.getString(it) } ?: "AutoTrack"
+                val label: Int? = app.applicationInfo?.labelRes
+                appName = label?.let { app.getString(it) } ?: "AutoTrack"
             }
             if (screenWidth == null) {
-                screenWidth = AutoTrack.sApp?.resources?.displayMetrics?.widthPixels ?: 1080
+                screenWidth = app.resources?.displayMetrics?.widthPixels ?: 1080
             }
             if (screenHeight == null) {
-                screenHeight = AutoTrack.sApp?.resources?.displayMetrics?.heightPixels ?: 1980
+                screenHeight = app.resources?.displayMetrics?.heightPixels ?: 1980
             }
             if (osVersion == null) {
                 osVersion = when (Build.VERSION.SDK_INT) {
