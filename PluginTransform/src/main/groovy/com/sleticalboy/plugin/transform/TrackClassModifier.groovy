@@ -17,48 +17,13 @@ import java.util.zip.ZipEntry
  */
 class TrackClassModifier {
 
-    private static final String INFLATER = 'app.AppCompatViewInflater$DeclaredOnClickListener'
-    private static final String ANDROIDX_INFLATER = 'androidx.appcompat.' + INFLATER
-    private static final String SUPPORT_INFLATER = 'android.support.v7.' + INFLATER
-
-    private static Set<String> sExcludes
-
-    static {
-        sExcludes = new HashSet<>()
-        sExcludes.add('android.support.')
-        sExcludes.add('androidx.')
-        sExcludes.add('kotlin.')
-        sExcludes.add('kotlinx.android.')
-        sExcludes.add('org.intellij.')
-        sExcludes.add('org.jetbrains.')
-        sExcludes.add('com.sleticalboy.autotrack.')
-    }
-
-    static boolean isExclude(String name) {
-        println('isExcludedClass: ' + name)
-        for (String exclude : sExcludes) {
-            if (name.startsWith(exclude)) {
-                if (name == ANDROIDX_INFLATER || name == SUPPORT_INFLATER) {
-                    return false
-                }
-                return true
-            }
-        }
-        if (name.contains('R$') || name.contains('R2$')
-                || name.contains('R.class') || name.contains('R2.class')
-                || name.contains('BuildConfig.class')) {
-            return true
-        }
-        return false
-    }
-
     static File modifyClass(File dir, File clsFile, File tempDir) {
         File modified = null
         try {
-            final String clsName = InternalUtils.toClassName(clsFile.getAbsolutePath()
+            final String clsName = TrackUtils.toClassName(clsFile.getAbsolutePath()
                     .replace(dir.getAbsolutePath() + File.separator, ""))
             final byte[] srcClsBytes = IOUtils.toByteArray(new FileInputStream(clsFile))
-            final byte[] modifiedClsBytes = modifyInner(srcClsBytes)
+            final byte[] modifiedClsBytes = modifyInternal(srcClsBytes)
             if (modifiedClsBytes != null) {
                 modified = new File(tempDir, clsName.replace(".", "") + ".class")
                 if (modified.exists()) {
@@ -71,12 +36,6 @@ class TrackClassModifier {
             modified = clsFile
         }
         return modified
-    }
-
-    private static byte[] modifyInner(byte[] src) {
-        final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS)
-        new ClassReader(src).accept(new TrackClassVisitor(cw), ClassReader.EXPAND_FRAMES)
-        return cw.toByteArray()
     }
 
     static File modifyJar(File jar, File tempDir, boolean hexName) {
@@ -96,8 +55,8 @@ class TrackClassModifier {
                 byte[] modifiedClsBytes = null
                 if (jarEntry.getName().endsWith(".class")) {
                     clsName = jarEntry.getName().replace("/", ".").replace(".class", "")
-                    if (!isExclude(clsName)) {
-                        modifiedClsBytes = modifyInner(srcClsBytes)
+                    if (!TrackUtils.excludes(clsName)) {
+                        modifiedClsBytes = modifyInternal(srcClsBytes)
                     }
                 }
                 if (modifiedClsBytes == null) {
@@ -112,5 +71,11 @@ class TrackClassModifier {
             return jar
         }
         return out
+    }
+
+    private static byte[] modifyInternal(byte[] src) {
+        final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS)
+        new ClassReader(src).accept(new TrackClassVisitor(cw), ClassReader.EXPAND_FRAMES)
+        return cw.toByteArray()
     }
 }

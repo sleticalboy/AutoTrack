@@ -7,17 +7,17 @@ import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
 
-class MyTransform extends Transform {
+class TrackTransform extends Transform {
 
     private Project project
 
-    MyTransform(Project project) {
+    TrackTransform(Project project) {
         this.project = project
     }
 
     @Override
     String getName() {
-        return "AutoTrack"
+        return "autoTrack"
     }
 
     @Override
@@ -66,7 +66,7 @@ class MyTransform extends Transform {
                     HashMap<String, File> modifyMap = new HashMap<>()
                     /**遍历以某一扩展名结尾的文件*/
                     dir.traverse(type: FileType.FILES, nameFilter: ~/.*\.class/) { File classFile ->
-                        if (!TrackClassModifier.isExclude(classFile.name)) {
+                        if (!TrackUtils.excludes(classFile.name)) {
                             File modified = TrackClassModifier.modifyClass(dir, classFile, context.getTemporaryDir())
                             if (modified != null) {
                                 /**key 为包名 + 类名，如：/cn/sensorsdata/autotrack/android/app/MainActivity.class*/
@@ -108,62 +108,6 @@ class MyTransform extends Transform {
             }
         }
     }
-
-    // @Override
-    // void transform(TransformInvocation invocation) throws TransformException,
-    //         InterruptedException, IOException {
-    //     someCrInfo()
-    //     invocation.inputs.each { input ->
-    //         // 遍历目录
-    //         input.directoryInputs.each { dir ->
-    //             final File dest = invocation.outputProvider.getContentLocation(
-    //                     dir.name, dir.contentTypes, dir.scopes, Format.DIRECTORY)
-    //             if (dir.file.isDirectory()) {
-    //                 final Map<String, File> modifiedFiles = new HashMap<>()
-    //                 final File[] clsFiles = dir.file.listFiles(new FilenameFilter() {
-    //                     @Override
-    //                     boolean accept(File file, String s) {
-    //                         return s.endsWith(".class")
-    //                     }
-    //                 })
-    //                 clsFiles.each {
-    //                     if (!TrackClassModifier.isExclude(it.name)) {
-    //                         final File modifiedCls = TrackClassModifier.modifyClass(dir.file, it, invocation.context.temporaryDir)
-    //                         if (modifiedCls != null) {
-    //                             final String key = it.absolutePath.replace(dir.file.absolutePath, "")
-    //                             modifiedFiles.put(key, modifiedCls)
-    //                         }
-    //                     }
-    //                 }
-    //                 FileUtils.copyDirectory(dir.file, dest)
-    //                 modifiedFiles.keySet().each {
-    //                     final File target = new File(dest.absolutePath, it)
-    //                     if (target.exists()) {
-    //                         target.delete()
-    //                     }
-    //                     final File cls = modifiedFiles.get(it)
-    //                     FileUtils.copyFile(cls, target)
-    //                     cls.delete()
-    //                 }
-    //             }
-    //         }
-    //         // 遍历 jar
-    //         input.jarInputs.each { jar ->
-    //             String realName = jar.name
-    //             if (jar.name.endsWith('.jar')) {
-    //                 realName = jar.name.substring(0, jar.name.length() - 4)
-    //             }
-    //             realName += DigestUtils.md5Hex(jar.file.absolutePath)
-    //             final File dest = invocation.outputProvider.getContentLocation(
-    //                     realName, jar.contentTypes, jar.scopes, Format.JAR)
-    //             File modifiedJar = TrackClassModifier.modifyJar(jar.file, invocation.context.temporaryDir, true)
-    //             if (modifiedJar == null) {
-    //                 modifiedJar = jar.file
-    //             }
-    //             FileUtils.copyFile(modifiedJar, dest)
-    //         }
-    //     }
-    // }
 
     static void someCrInfo() {
         println('-----------com.sleticalboy.plugin--------------')

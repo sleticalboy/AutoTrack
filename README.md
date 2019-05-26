@@ -10,6 +10,8 @@
 
 ## AspectJ
 
+- [51 信用卡 Android 自动埋点实践](https://www.infoq.cn/article/dhfXLVGa7e9kEX_pbtoZ)
+
 ### 自定义 gradle 插件
 - 目录结构
 

@@ -116,7 +116,7 @@ public class TrackActivity extends AppCompatActivity {
     }
 
     private void toast(CharSequence msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        ToastUtils.toast(this, msg);
     }
 
     // 不需要特殊处理，因为 View 在初始化的过程中会通过反射得到声明在布局文件中的 android:onClick="xxx" 方法
@@ -124,6 +124,6 @@ public class TrackActivity extends AppCompatActivity {
     // 或者 android.support.v7.app.AppCompatViewInflater.DeclaredOnClickListener
     // 测试通过
     public void xmlClick(View view) {
-        ToastUtils.shortToast(this, "xml click");
+        toast("xml click");
     }
 }

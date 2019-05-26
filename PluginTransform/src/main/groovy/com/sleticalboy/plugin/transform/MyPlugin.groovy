@@ -8,6 +8,6 @@ class MyPlugin implements Plugin<Project> {
     @Override
     void apply(Project target) {
         target.extensions.findByType(AppExtension.class)
-                .registerTransform(new MyTransform(target))
+                .registerTransform(new TrackTransform(target))
     }
 }

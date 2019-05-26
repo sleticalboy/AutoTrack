@@ -14,7 +14,15 @@ public final class ToastUtils {
         throw new AssertionError();
     }
 
-    public static void shortToast(Context context, CharSequence text) {
-        Toast.makeText(context, "" + text, Toast.LENGTH_SHORT).show();
+    public static void toast(Context context, CharSequence text) {
+        toastInternal(context, text, Toast.LENGTH_SHORT);
+    }
+
+    public static void toastLong(Context context, CharSequence text) {
+        toastInternal(context, text, Toast.LENGTH_LONG);
+    }
+
+    private static void toastInternal(Context context, CharSequence text, int duration) {
+        Toast.makeText(context, "" + text, duration).show();
     }
 }

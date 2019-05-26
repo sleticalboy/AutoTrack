@@ -102,63 +102,63 @@ class TrackClassVisitor extends ClassVisitor implements Opcodes {
             protected void onMethodExit(int opcode) {
                 if (methodDesc == 'onContextItemSelected(Landroid/view/MenuItem;)Z'
                         || methodDesc == 'onOptionsItemSelected(Landroid/view/MenuItem;)Z') {
-                    InternalUtils.log('TrackClassVisitor cls = ' + clsName + ' method = ' + methodDesc)
+                    TrackUtils.log('TrackClassVisitor cls = ' + clsName + ' method = ' + methodDesc)
                     // Activity.onContextItemSelected(MenuItem item)
                     // Activity.onOptionsItemSelected(MenuItem item)
                     // 0 表示 `调用者` // 1/2/3... 表示当前方法 `参数` 的索引 (从 1 开始)
                     // 引用数据类型用 ALOAD 基本数据类型用其他(比如 int 用 ILOAD, float 用 FLOAD)
-                    visitor.visitVarInsn(ALOAD, 0)
-                    visitor.visitVarInsn(ALOAD, 1)
+                    visitor.visitVarInsn(ALOAD, 0) /*this Context*/
+                    visitor.visitVarInsn(ALOAD, 1) /*item MenuItem*/
                     visitor.visitMethodInsn(INVOKESTATIC, SDK_CLASS, SDK_METHOD,
                             '(Ljava/lang/Object;Landroid/view/MenuItem;)V', false)
                 } else if (hasInterface(ON_CLICK_VIEW) && ON_CLICK_VIEW_DESC == methodDesc
                         || ON_CLICK_VIEW_LAMBDA.matcher(methodDesc)
                         || DYNAMIC_CLICK_LAMBDA.matcher(methodDesc)) {
-                    InternalUtils.log('TrackClassVisitor cls = ' + clsName + ' method = ' + methodDesc)
+                    TrackUtils.log('TrackClassVisitor cls = ' + clsName + ' method = ' + methodDesc)
                     // View.OnClickListener
                     // onClick(View view)
-                    visitor.visitVarInsn(ALOAD, 1)
+                    visitor.visitVarInsn(ALOAD, 1) /*view View*/
                     visitor.visitMethodInsn(INVOKESTATIC, SDK_CLASS, SDK_METHOD,
                             '(Ljava/lang/Object;)V', false)
                 } else if (hasInterface(ON_CHECKED_CHANGE) && ON_CHECKED_CHANGE_DESC == methodDesc
                         || ON_CHECKED_CHANGE_LAMBDA.matcher(methodDesc)) {
-                    InternalUtils.log('TrackClassVisitor cls = ' + clsName + ' method = ' + methodDesc)
+                    TrackUtils.log('TrackClassVisitor cls = ' + clsName + ' method = ' + methodDesc)
                     // CompoundButton.OnCheckedChangedListener
                     // onCheckedChanged(CompoundButton button, boolean isChecked)
-                    visitor.visitVarInsn(ALOAD, 1)
+                    visitor.visitVarInsn(ALOAD, 1) /*button CompoundButton*/
                     visitor.visitMethodInsn(INVOKESTATIC, SDK_CLASS, SDK_METHOD,
                             '(Ljava/lang/Object;)V', false)
                 } else if (hasInterface(ON_CLICK_DIA) && ON_CLICK_DIA_DESC == methodDesc
                         || ON_CLICK_DIA_LAMBDA.matcher(methodDesc)) {
                     // android.content.DialogInterface.OnClickListener
                     // void onClick(DialogInterface dialog, int which)
-                    visitor.visitVarInsn(ALOAD, 1)
-                    visitor.visitVarInsn(ILOAD, 2)
+                    visitor.visitVarInsn(ALOAD, 1) /*dialog DialogInterface*/
+                    visitor.visitVarInsn(ILOAD, 2) /*which int*/
                     visitor.visitMethodInsn(INVOKESTATIC, SDK_CLASS, SDK_METHOD,
                             '(Landroid/content/DialogInterface;I)V', false)
                 } else if (hasInterface(ON_CLICK_DIA_MULTI) && ON_CLICK_DIA_MULTI_DESC == methodDesc
                         || ON_CLICK_DIA_MULTI_LAMBDA.matcher(methodDesc)) {
                     // android.content.DialogInterface.OnMultiChoiceClickListener
                     // void onClick(DialogInterface dialog, int which, boolean isChecked)
-                    visitor.visitVarInsn(ALOAD, 1)
-                    visitor.visitVarInsn(ILOAD, 2)
-                    visitor.visitVarInsn(ILOAD, 3)
+                    visitor.visitVarInsn(ALOAD, 1) /*dialog DialogInterface*/
+                    visitor.visitVarInsn(ILOAD, 2) /*which int*/
+                    visitor.visitVarInsn(ILOAD, 3) /*isChecked boolean*/
                     visitor.visitMethodInsn(INVOKESTATIC, SDK_CLASS, SDK_METHOD,
                             '(Landroid/content/DialogInterface;IZ)V', false)
                 } else if (hasInterface(ON_ITEM_CLICK) && ON_ITEM_CLICK_DESC == methodDesc
                         || ON_ITEM_CLICK_LAMBDA.matcher(methodDesc)) {
-                    InternalUtils.log('TrackClassVisitor cls = ' + clsName + ' method = ' + methodDesc)
+                    TrackUtils.log('TrackClassVisitor cls = ' + clsName + ' method = ' + methodDesc)
                     // android.widget.AdapterView.OnItemClickListener
                     // void onItemClick(AdapterView<?> parent, View view, int position, long id)
                     if (ON_ITEM_CLICK_LAMBDA.matcher(methodDesc)) {
                         // AdapterView 通过 lambda 表达式设置 OnItemClickListener
-                        visitor.visitVarInsn(ALOAD, 0)
-                        visitor.visitVarInsn(ALOAD, 1)
-                        visitor.visitVarInsn(ILOAD, 2)
+                        visitor.visitVarInsn(ALOAD, 0) /*this AdapterView*/
+                        visitor.visitVarInsn(ALOAD, 1) /*view View*/
+                        visitor.visitVarInsn(ILOAD, 2) /*position int*/
                     } else {
-                        visitor.visitVarInsn(ALOAD, 1)
-                        visitor.visitVarInsn(ALOAD, 2)
-                        visitor.visitVarInsn(ILOAD, 3)
+                        visitor.visitVarInsn(ALOAD, 1) /*parent AdapterView*/
+                        visitor.visitVarInsn(ALOAD, 2) /*view View*/
+                        visitor.visitVarInsn(ILOAD, 3) /*position int*/
                     }
                     visitor.visitMethodInsn(INVOKESTATIC, SDK_CLASS, SDK_METHOD,
                             '(Landroid/widget/AdapterView;Landroid/view/View;I)V', false)

@@ -68,7 +68,61 @@ public final class TrackSdk {
         sendTrackMessage(new SomeArgs(dialog, which, isChecked, NULL));
     }
 
-    private static void onClickMenuItem(Activity activity, MenuItem item) {
+    private static void sendTrackMessage(SomeArgs args) {
+        if (sTrackHandler == null) {
+            throw new IllegalThreadStateException("You must call TrackSdk.prepare() first.");
+        }
+        sTrackHandler.obtainMessage(MSG_TRACK, args).sendToTarget();
+    }
+
+    private static void trackInternal(Object obj, Object arg1, Object arg2, Object arg3) {
+        if (arg1 == NULL && arg2 == NULL && arg3 == NULL) {
+            if (obj instanceof Activity) {
+                onPageVisited((Activity) obj/*activity*/);
+            } else if (obj instanceof View) {
+                onViewClicked((View) obj/*view*/);
+            }
+        } else if (arg2 == NULL && arg3 == NULL) {
+            if (obj instanceof DialogInterface && arg1 instanceof Integer) {
+                onDialogButton$((DialogInterface) obj/*dialog*/, (Integer) arg1/*which*/);
+            } else if (arg1 instanceof MenuItem) {
+                onMenuItem$(ActivityHelper.findActivity(obj), (MenuItem) arg1);
+            }
+        } else if (arg3 == NULL) {
+            if (obj instanceof AdapterView && arg1 instanceof View && arg2 instanceof Integer) {
+                onAdapterViewItem$((AdapterView) obj/*adapterVew*/, (View) arg1/*View*/, (Integer) arg2/*position*/);
+            } else if (obj instanceof DialogInterface && arg1 instanceof Integer && arg2 instanceof Boolean) {
+                onDialogItem$((DialogInterface) obj/*dialog*/, (Integer) arg1/*which*/, (Boolean) arg2/*isChecked*/);
+            }
+        }
+    }
+
+    private static void onAdapterViewItem$(AdapterView<?> parent, View view, int position) {
+        final Object item = parent.getAdapter().getItem(position);
+        Log.d(TAG, "onAdapterViewItem$() parent = [" + parent + "], view = [" + view + "], position = [" + position + "], item = [" + item + ']');
+    }
+
+    private static void onDialogItem$(DialogInterface dialog, int which, boolean isChecked) {
+        Object item = null;
+        if (dialog instanceof AlertDialog) {
+            item = ((AlertDialog) dialog).getListView().getAdapter().getItem(which);
+        } else if (dialog instanceof android.app.AlertDialog) {
+            item = ((android.app.AlertDialog) dialog).getListView().getAdapter().getItem(which);
+        }
+        Log.d(TAG, "onDialogItem$() dialog = [" + dialog + "], which = [" + which + "], item = [" + item + "], isChecked = [" + isChecked + "]");
+    }
+
+    private static void onDialogButton$(DialogInterface dialog, int which) {
+        CharSequence text = null;
+        if (dialog instanceof AlertDialog) {
+            text = ((AlertDialog) dialog).getButton(which).getText();
+        } else if (dialog instanceof android.app.AlertDialog) {
+            text = ((android.app.AlertDialog) dialog).getButton(which).getText();
+        }
+        Log.d(TAG, "onDialogButton$() dialog = [" + dialog + "], which = [" + which + "], text = [" + text + ']');
+    }
+
+    private static void onMenuItem$(Activity activity, MenuItem item) {
         final View view = item.getActionView();
         doTrack(new ClickInfo() {
             @Override
@@ -91,22 +145,7 @@ public final class TrackSdk {
         });
     }
 
-    private static void onPageView(Activity activity) {
-        doTrack(new PageInfo() {
-            @NonNull
-            @Override
-            public CharSequence title() {
-                return ActivityHelper.getTitle(activity);
-            }
-
-            @Override
-            public CharSequence path() {
-                return activity.getClass().getName();
-            }
-        });
-    }
-
-    private static void onClick(View widget) {
+    private static void onViewClicked(View widget) {
         doTrack(new ClickInfo() {
             @Override
             public CharSequence desc() {
@@ -121,53 +160,23 @@ public final class TrackSdk {
         });
     }
 
-    private static void sendTrackMessage(SomeArgs item) {
-        if (sTrackHandler == null) {
-            throw new IllegalThreadStateException("You must call TrackSdk.prepare() first.");
-        }
-        sTrackHandler.obtainMessage(MSG_TRACK, item).sendToTarget();
+    private static void onPageVisited(Activity activity) {
+        doTrack(new PageInfo() {
+            @NonNull
+            @Override
+            public CharSequence title() {
+                return ActivityHelper.getTitle(activity);
+            }
+
+            @Override
+            public CharSequence path() {
+                return activity.getClass().getName();
+            }
+        });
     }
 
     private static void doTrack(@NonNull Trackable trackable) {
         Log.d(TAG, "" + trackable.toJson());
-    }
-
-    private static void trackInternal(Object obj, Object arg1, Object arg2, Object arg3) {
-        if (arg1 == NULL && arg2 == NULL && arg3 == NULL) {
-            if (obj instanceof Activity) {
-                onPageView((Activity) obj/*activity*/);
-            } else if (obj instanceof View) {
-                onClick((View) obj/*view*/);
-            }
-        } else if (arg2 == NULL && arg3 == NULL) {
-            if (obj instanceof DialogInterface && arg1 instanceof Integer) {
-                CharSequence text = null;
-                if (obj instanceof AlertDialog) {
-                    text = ((AlertDialog) obj).getButton((Integer) arg1).getText();
-                } else if (obj instanceof android.app.AlertDialog) {
-                    text = ((android.app.AlertDialog) obj).getButton((Integer) arg1).getText();
-                }
-                // onClickDialogButton((DialogInterface) obj/*dialog*/, (Integer) arg1/*which*/);
-                Log.d(TAG, "onClickDialogButton() called with: dialog = [" + obj + "], which = [" + arg1 + "], text = [" + text + ']');
-            } else if (arg1 instanceof MenuItem) {
-                onClickMenuItem(ActivityHelper.findActivity(obj), (MenuItem) arg1);
-            }
-        } else if (arg3 == NULL) {
-            if (obj instanceof AdapterView && arg1 instanceof View && arg2 instanceof Integer) {
-                final Object item = ((AdapterView) obj).getAdapter().getItem((Integer) arg2);
-                // onClickAdapterViewItem((AdapterView) obj/*adapterVew*/, (View) arg1, (Integer) arg2/*position*/);
-                Log.d(TAG, "onClickAdapterViewItem() called with: parent = [" + obj + "], view = [" + arg1 + "], position = [" + arg2 + "], item = [" + item + ']');
-            } else if (obj instanceof DialogInterface && arg1 instanceof Integer && arg2 instanceof Boolean) {
-                Object item = null;
-                if (obj instanceof AlertDialog) {
-                    item = ((AlertDialog) obj).getListView().getAdapter().getItem((Integer) arg1);
-                } else if (obj instanceof android.app.AlertDialog) {
-                    item = ((android.app.AlertDialog) obj).getListView().getAdapter().getItem((Integer) arg1);
-                }
-                // onClickDialogItem((DialogInterface) obj/*dialog*/, (Integer) arg1/*which*/, (Boolean) arg2/*isChecked*/);
-                Log.d(TAG, "onClickDialogItem() called with: dialog = [" + obj + "], which = [" + arg1 + "], item = [" + item + "], isChecked = [" + arg2 + "]");
-            }
-        }
     }
 
     private static final class TrackCallback implements Handler.Callback {
@@ -198,12 +207,7 @@ public final class TrackSdk {
 
         @Override
         public String toString() {
-            return "SomeArgs{" +
-                    "obj=" + obj +
-                    ", arg1=" + arg1 +
-                    ", arg2=" + arg2 +
-                    ", arg3=" + arg3 +
-                    '}';
+            return "SomeArgs{" + "obj=" + obj + ", arg1=" + arg1 + ", arg2=" + arg2 + ", arg3=" + arg3 + '}';
         }
     }
 }

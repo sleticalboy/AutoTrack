@@ -3,13 +3,19 @@ package com.sleticalboy.transform
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.util.SparseArray
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    private val fragments = SparseArray<Fragment>()
+    private val fragId = 1
+    private var currentFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,7 +24,20 @@ class MainActivity : AppCompatActivity() {
 
         // 测试通过
         fab.setOnClickListener {
-            startActivity(Intent(application, TrackActivity::class.java))
+            val transaction = supportFragmentManager.beginTransaction()
+            var fragment = fragments.get(fragId)
+            if (fragment == null) {
+                fragment = TrackFragment()
+                transaction.add(R.id.flContainer, fragment)
+                fragments.put(fragId, fragment)
+            }
+            if (currentFragment == fragment) {
+                return@setOnClickListener
+            }
+            transaction.show(fragment)
+            currentFragment = fragment
+            transaction.commitNow()
+            it.visibility = View.GONE
         }
     }
 
@@ -44,6 +63,10 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.grid_view -> {
                 addGridView()
+                return true
+            }
+            R.id.track_demo -> {
+                startActivity(Intent(application, TrackActivity::class.java))
                 return true
             }
             else -> super.onOptionsItemSelected(item)
@@ -75,7 +98,7 @@ class MainActivity : AppCompatActivity() {
             override fun getCount(): Int = data.size
         }
         gv.setOnItemClickListener { _, _, position, _ ->
-            ToastUtils.shortToast(this, "position: $position")
+            ToastUtils.toast(this, "position: $position")
         }
         val params = FrameLayout.LayoutParams(-1, -1)
         params.gravity = Gravity.CENTER
@@ -101,7 +124,7 @@ class MainActivity : AppCompatActivity() {
         val data = getData()
         lv.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data)
         lv.setOnItemClickListener { _, _, position, _ ->
-            ToastUtils.shortToast(this, "data: ${data[position]} pos: $position")
+            ToastUtils.toast(this, "data: ${data[position]} pos: $position")
         }
         val params = FrameLayout.LayoutParams(-1, -1)
         params.gravity = Gravity.CENTER
@@ -120,10 +143,18 @@ class MainActivity : AppCompatActivity() {
         helloWorld.textSize = 36F
         helloWorld.setTextColor(resources.getColor(R.color.colorPrimary))
         helloWorld.setOnClickListener {
-            ToastUtils.shortToast(this, helloWorld.text)
+            ToastUtils.toast(this, helloWorld.text)
         }
         val params = FrameLayout.LayoutParams(-2, -2)
         params.gravity = Gravity.CENTER
         flContainer.addView(helloWorld, params)
+    }
+
+    // 不需要特殊处理，因为 View 在初始化的过程中会通过反射得到声明在布局文件中的 android:onClick="xxx" 方法
+    // 并设置给 View， 详情参见源码 androidx.appcompat.app.AppCompatViewInflater.DeclaredOnClickListener
+    // 或者 android.support.v7.app.AppCompatViewInflater.DeclaredOnClickListener
+    // 测试通过
+    fun xmlClick(view: View) {
+        ToastUtils.toast(view.context, "xml click")
     }
 }

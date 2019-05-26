@@ -16,4 +16,8 @@
     <item
         android:id="@+id/grid_view"
         android:title="@string/menu_grid_view" />
+
+    <item
+        android:id="@+id/track_demo"
+        android:title="@string/track_demo" />
 </menu>
