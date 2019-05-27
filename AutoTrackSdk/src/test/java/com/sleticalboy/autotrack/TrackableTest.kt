@@ -7,11 +7,11 @@ package com.sleticalboy.autotrack
  */
 class TrackableTest {
 
-    private var trackable: Trackable? = null
+    private var mBaseTrackInfo: BaseTrackInfo? = null
 
     // @Before
     fun setUp() {
-        trackable = object : Trackable() {
+        mBaseTrackInfo = object : BaseTrackInfo() {
             override fun path(): CharSequence {
                 return "test-path"
             }
@@ -29,11 +29,11 @@ class TrackableTest {
 
     // @After
     fun tearDown() {
-        trackable = null
+        mBaseTrackInfo = null
     }
 
     // @Test
     fun formatTest() {
-        println(trackable)
+        println(mBaseTrackInfo)
     }
 }

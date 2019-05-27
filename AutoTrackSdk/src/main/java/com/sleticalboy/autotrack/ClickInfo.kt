@@ -1,6 +1,6 @@
 package com.sleticalboy.autotrack
 
-abstract class ClickInfo : Trackable() {
+abstract class ClickInfo : BaseTrackInfo() {
 
     override fun label(): CharSequence = desc() ?: ""
 

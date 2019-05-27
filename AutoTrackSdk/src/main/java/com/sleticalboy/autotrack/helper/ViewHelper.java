@@ -46,8 +46,12 @@ public final class ViewHelper {
         // ImageView$0$move_icon$$search_time: xx ms
         // 分析数据时，先用 $$ 切割，再用 -> 切割
 
+        // MainActivity$$DecorView->LinearLayout$0->FrameLayout$1->FitWindowsLinearLayout$0$app:id/action_bar_root->
+        // ContentFrameLayout$1$android:id/content->CoordinatorLayout$0->FrameLayout$1$app:id/flContainer->
+        // RecyclerView$0->LinearLayout$0 $$ search_time: 7 ms
+
         // 实际结果
-        // [DecorView$-1->LinearLayout$0->FrameLayout$1->FitWindowsLinearLayout$0$app:id/action_bar_root->
+        // [DecorView->LinearLayout$0->FrameLayout$1->FitWindowsLinearLayout$0$app:id/action_bar_root->
         // ContentFrameLayout$1$android:id/content->CoordinatorLayout$0->FloatingActionButton$2$app:id/fab]
         return sb.toString();
     }

@@ -20,4 +20,8 @@
     <item
         android:id="@+id/track_demo"
         android:title="@string/track_demo" />
+
+    <item
+        android:id="@+id/recycler_view"
+        android:title="@string/recycler_view" />
 </menu>

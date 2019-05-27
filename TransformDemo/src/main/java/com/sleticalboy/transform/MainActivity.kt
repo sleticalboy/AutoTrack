@@ -8,6 +8,9 @@ import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.sleticalboy.transform.bean.Image
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
@@ -69,15 +72,29 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(application, TrackActivity::class.java))
                 return true
             }
+            R.id.recycler_view -> {
+                addRecyclerView()
+                return true
+            }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun addRecyclerView() {
+        flContainer.removeAllViews()
+        val recyclerView = RecyclerView(this)
+        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recyclerView.adapter = SimpleArrayAdapter(getImages())
+        val params = FrameLayout.LayoutParams(-1, -1)
+        params.gravity = Gravity.CENTER
+        flContainer.addView(recyclerView, params)
     }
 
     private fun addGridView() {
         flContainer.removeAllViews()
         val gv = GridView(this)
         gv.numColumns = 3
-        val data = getImages()
+        val data = getImageRes()
         gv.adapter = object : BaseAdapter() {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
                 var recycle = convertView
@@ -105,7 +122,38 @@ class MainActivity : AppCompatActivity() {
         flContainer.addView(gv, params)
     }
 
-    private fun getImages(): Array<Int> = arrayOf(
+    private fun getImages(): List<Image> {
+        return listOf(
+            Image(null, "Image 00", R.mipmap.ic_launcher),
+            Image(null, "Image 01", R.mipmap.ic_launcher),
+            Image(null, "Image 02", R.mipmap.ic_launcher),
+            Image(null, "Image 03", R.mipmap.ic_launcher),
+            Image(null, "Image 04", R.mipmap.ic_launcher),
+            Image(null, "Image 05", R.mipmap.ic_launcher),
+            Image(null, "Image 06", R.mipmap.ic_launcher),
+            Image(null, "Image 07", R.mipmap.ic_launcher),
+            Image(null, "Image 08", R.mipmap.ic_launcher),
+            Image(null, "Image 09", R.mipmap.ic_launcher),
+            Image(null, "Image 10", R.mipmap.ic_launcher),
+            Image(null, "Image 11", R.mipmap.ic_launcher),
+            Image(null, "Image 12", R.mipmap.ic_launcher),
+            Image(null, "Image 13", R.mipmap.ic_launcher),
+            Image(null, "Image 14", R.mipmap.ic_launcher),
+            Image(null, "Image 15", R.mipmap.ic_launcher),
+            Image(null, "Image 16", R.mipmap.ic_launcher),
+            Image(null, "Image 17", R.mipmap.ic_launcher),
+            Image(null, "Image 18", R.mipmap.ic_launcher),
+            Image(null, "Image 19", R.mipmap.ic_launcher),
+            Image(null, "Image 20", R.mipmap.ic_launcher),
+            Image(null, "Image 21", R.mipmap.ic_launcher),
+            Image(null, "Image 22", R.mipmap.ic_launcher),
+            Image(null, "Image 23", R.mipmap.ic_launcher),
+            Image(null, "Image 24", R.mipmap.ic_launcher),
+            Image(null, "Image 25", R.mipmap.ic_launcher)
+        )
+    }
+
+    private fun getImageRes(): Array<Int> = arrayOf(
         R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher,
         R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher,
         R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher,

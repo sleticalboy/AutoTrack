@@ -4,4 +4,5 @@
     <string name="menu_list_view">ListView</string>
     <string name="menu_grid_view">GridView</string>
     <string name="track_demo">TrackDemo</string>
+    <string name="recycler_view">RecyclerView</string>
 </resources>

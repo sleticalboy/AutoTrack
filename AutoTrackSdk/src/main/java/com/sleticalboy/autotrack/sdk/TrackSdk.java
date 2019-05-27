@@ -12,8 +12,8 @@ import android.widget.AdapterView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import com.sleticalboy.autotrack.ClickInfo;
+import com.sleticalboy.autotrack.ITrackable;
 import com.sleticalboy.autotrack.PageInfo;
-import com.sleticalboy.autotrack.Trackable;
 import com.sleticalboy.autotrack.helper.ActivityHelper;
 import com.sleticalboy.autotrack.helper.ResHelper;
 import com.sleticalboy.autotrack.helper.ViewHelper;
@@ -99,7 +99,13 @@ public final class TrackSdk {
 
     private static void onAdapterViewItem$(AdapterView<?> parent, View view, int position) {
         final Object item = parent.getAdapter().getItem(position);
-        Log.d(TAG, "onAdapterViewItem$() parent = [" + parent + "], view = [" + view + "], position = [" + position + "], item = [" + item + ']');
+        final CharSequence text;
+        if (item instanceof ITrackable) {
+            text = ((ITrackable) item).format();
+        } else {
+            text = String.valueOf(item);
+        }
+        Log.d(TAG, "onAdapterViewItem$() parent = [" + parent + "], view = [" + view + "], position = [" + position + "], item = [" + text + ']');
     }
 
     private static void onDialogItem$(DialogInterface dialog, int which, boolean isChecked) {
@@ -109,7 +115,13 @@ public final class TrackSdk {
         } else if (dialog instanceof android.app.AlertDialog) {
             item = ((android.app.AlertDialog) dialog).getListView().getAdapter().getItem(which);
         }
-        Log.d(TAG, "onDialogItem$() dialog = [" + dialog + "], which = [" + which + "], item = [" + item + "], isChecked = [" + isChecked + "]");
+        final CharSequence text;
+        if (item instanceof ITrackable) {
+            text = ((ITrackable) item).format();
+        } else {
+            text = String.valueOf(item);
+        }
+        Log.d(TAG, "onDialogItem$() dialog = [" + dialog + "], which = [" + which + "], item = [" + text + "], isChecked = [" + isChecked + "]");
     }
 
     private static void onDialogButton$(DialogInterface dialog, int which) {
@@ -175,8 +187,8 @@ public final class TrackSdk {
         });
     }
 
-    private static void doTrack(@NonNull Trackable trackable) {
-        Log.d(TAG, "" + trackable.toJson());
+    private static void doTrack(@NonNull ITrackable trackable) {
+        Log.d(TAG, "" + trackable.format());
     }
 
     private static final class TrackCallback implements Handler.Callback {

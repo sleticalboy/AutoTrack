@@ -1,6 +1,6 @@
 package com.sleticalboy.autotrack
 
-abstract class PageInfo : Trackable() {
+abstract class PageInfo : BaseTrackInfo() {
 
     override fun label(): CharSequence = title()
 

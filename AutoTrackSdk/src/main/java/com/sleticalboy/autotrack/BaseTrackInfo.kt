@@ -8,7 +8,7 @@ import java.util.*
  * Created on 19-5-8.
  * @author leebin
  */
-abstract class Trackable {
+abstract class BaseTrackInfo : ITrackable {
 
     companion object {
         private var appName: String? = null
@@ -89,7 +89,7 @@ abstract class Trackable {
 
     override fun toString(): String = toJson()
 
-    fun toJson(): String {
+    private fun toJson(): String {
         val sb = StringBuilder("{")
         sb.append("\"sdk_info\":\"").append(sdkVersion()).append("\",")
 
@@ -113,4 +113,6 @@ abstract class Trackable {
         sb.append("}")
         return sb.toString()
     }
+
+    final override fun format(): CharSequence = toJson()
 }
