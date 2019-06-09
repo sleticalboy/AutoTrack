@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sleticalboy.transform.bean.Image
+import kotlinx.android.synthetic.main.recycler_image_item.view.*
 
 /**
  * Created on 19-5-27.
@@ -39,6 +40,6 @@ class SimpleArrayAdapter(private val data: List<Image>) : RecyclerView.Adapter<S
 
 class SimpleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    val image: ImageView = itemView.findViewById(R.id.image)
-    val desc: TextView = itemView.findViewById(R.id.desc)
+    val image: ImageView = itemView.image
+    val desc: TextView = itemView.desc
 }
