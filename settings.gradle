@@ -1,4 +1,4 @@
 include ':AutoTrackSdk',
-        /* ':AspectJDemo', ':PluginAspectJ',*/
+        ':AspectJDemo', ':PluginAspectJ',
         ':PluginTransform', ':TransformDemo'
-rootProject.name='AutoTrack'
+rootProject.name = 'AutoTrack'
