@@ -4,8 +4,8 @@ apply plugin: 'maven'
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
-    implementation "com.android.tools.build:gradle:$rootProject.ext.gradle_version"
-    testImplementation 'junit:junit:4.13'
+    implementation 'com.android.tools.build:gradle:3.4.2'
+    testImplementation 'junit:junit:4.12'
 }
 
 repositories {

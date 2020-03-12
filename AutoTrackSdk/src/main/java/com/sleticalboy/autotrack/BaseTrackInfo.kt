@@ -39,7 +39,6 @@ abstract class BaseTrackInfo : ITrackable {
             }
             if (osVersion == null) {
                 osVersion = when (Build.VERSION.SDK_INT) {
-                    Build.VERSION_CODES.Q -> "10.0"
                     Build.VERSION_CODES.P -> "9.0"
                     Build.VERSION_CODES.O_MR1 -> "8.1"
                     Build.VERSION_CODES.O -> "8.0"

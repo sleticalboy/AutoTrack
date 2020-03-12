@@ -1,14 +1,13 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-
 android {
-    compileSdkVersion rootProject.ext.compile_version
-    buildToolsVersion rootProject.ext.build_version
+    compileSdkVersion 29
+    buildToolsVersion = '29.0.0'
 
     defaultConfig {
-        minSdkVersion rootProject.ext.min_version
-        targetSdkVersion rootProject.ext.target_version
+        minSdkVersion 19
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
@@ -31,10 +30,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation "androidx.core:core-ktx:$ktx_version"
-    testImplementation 'junit:junit:4.13'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.core:core-ktx:1.0.2'
+    testImplementation 'junit:junit:4.12'
     // https://mvnrepository.com/artifact/org.json/json
     // testImplementation '{group}:{name}:{version}'
     testImplementation 'org.json:json:20180813'
