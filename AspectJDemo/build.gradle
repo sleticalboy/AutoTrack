@@ -58,7 +58,7 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$constraint_version"
     implementation "com.google.android.material:material:$material_version"
     // AspectJ
-    implementation 'org.aspectj:aspectjrt:1.9.0'
+    implementation 'org.aspectj:aspectjrt:1.9.5'
 }
 
 final def tag = "AutoTrack "
