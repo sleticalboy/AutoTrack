@@ -6,7 +6,5 @@ abstract class ClickInfo : BaseTrackInfo() {
 
     abstract fun desc(): CharSequence?
 
-    override fun type(): CharSequence {
-        return "WidgetClick"
-    }
+    override fun type(): CharSequence = "WidgetClick"
 }

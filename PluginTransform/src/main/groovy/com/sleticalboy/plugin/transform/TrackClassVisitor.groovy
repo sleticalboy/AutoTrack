@@ -102,7 +102,7 @@ class TrackClassVisitor extends ClassVisitor implements Opcodes {
             protected void onMethodExit(int opcode) {
                 if (methodDesc == 'onContextItemSelected(Landroid/view/MenuItem;)Z'
                         || methodDesc == 'onOptionsItemSelected(Landroid/view/MenuItem;)Z') {
-                    TrackUtils.log('TrackClassVisitor cls = ' + clsName + ' method = ' + methodDesc)
+                    Utils.log('TrackClassVisitor cls = ' + clsName + ' method = ' + methodDesc)
                     // Activity.onContextItemSelected(MenuItem item)
                     // Activity.onOptionsItemSelected(MenuItem item)
                     // 0 表示 `调用者` // 1/2/3... 表示当前方法 `参数` 的索引 (从 1 开始)
@@ -114,7 +114,7 @@ class TrackClassVisitor extends ClassVisitor implements Opcodes {
                 } else if (hasInterface(ON_CLICK_VIEW) && ON_CLICK_VIEW_DESC == methodDesc
                         || ON_CLICK_VIEW_LAMBDA.matcher(methodDesc)
                         || DYNAMIC_CLICK_LAMBDA.matcher(methodDesc)) {
-                    TrackUtils.log('TrackClassVisitor cls = ' + clsName + ' method = ' + methodDesc)
+                    Utils.log('TrackClassVisitor cls = ' + clsName + ' method = ' + methodDesc)
                     // View.OnClickListener
                     // onClick(View view)
                     visitor.visitVarInsn(ALOAD, 1) /*view View*/
@@ -122,7 +122,7 @@ class TrackClassVisitor extends ClassVisitor implements Opcodes {
                             '(Ljava/lang/Object;)V', false)
                 } else if (hasInterface(ON_CHECKED_CHANGE) && ON_CHECKED_CHANGE_DESC == methodDesc
                         || ON_CHECKED_CHANGE_LAMBDA.matcher(methodDesc)) {
-                    TrackUtils.log('TrackClassVisitor cls = ' + clsName + ' method = ' + methodDesc)
+                    Utils.log('TrackClassVisitor cls = ' + clsName + ' method = ' + methodDesc)
                     // CompoundButton.OnCheckedChangedListener
                     // onCheckedChanged(CompoundButton button, boolean isChecked)
                     visitor.visitVarInsn(ALOAD, 1) /*button CompoundButton*/
@@ -147,7 +147,7 @@ class TrackClassVisitor extends ClassVisitor implements Opcodes {
                             '(Landroid/content/DialogInterface;IZ)V', false)
                 } else if (hasInterface(ON_ITEM_CLICK) && ON_ITEM_CLICK_DESC == methodDesc
                         || ON_ITEM_CLICK_LAMBDA.matcher(methodDesc)) {
-                    TrackUtils.log('TrackClassVisitor cls = ' + clsName + ' method = ' + methodDesc)
+                    Utils.log('TrackClassVisitor cls = ' + clsName + ' method = ' + methodDesc)
                     // android.widget.AdapterView.OnItemClickListener
                     // void onItemClick(AdapterView<?> parent, View view, int position, long id)
                     if (ON_ITEM_CLICK_LAMBDA.matcher(methodDesc)) {
@@ -170,14 +170,15 @@ class TrackClassVisitor extends ClassVisitor implements Opcodes {
     }
 
     private boolean hasInterface(String listener) {
-        if (interfaces == null || interfaces.length == 0) {
-            return false
-        }
-        for (String inter : interfaces) {
-            if (listener == inter) {
-                return true
-            }
-        }
-        return false
+        return Arrays.binarySearch(interfaces, listener) >= 0
+//        if (interfaces == null || interfaces.length == 0) {
+//            return false
+//        }
+//        for (String inter : interfaces) {
+//            if (listener == inter) {
+//                return true
+//            }
+//        }
+//        return false
     }
 }

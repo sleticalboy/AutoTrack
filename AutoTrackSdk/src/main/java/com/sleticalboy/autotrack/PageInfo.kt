@@ -6,7 +6,5 @@ abstract class PageInfo : BaseTrackInfo() {
 
     abstract fun title(): CharSequence
 
-    override fun type(): String {
-        return "PageView"
-    }
+    override fun type(): String = "PageView"
 }

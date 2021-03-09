@@ -20,9 +20,8 @@ public final class AutoTrack {
     }
 
     public static void init(@NonNull Application app) {
-        if (sApp == null) {
-            sApp = app;
-        }
+        if (sApp == null) sApp = app;
+
         app.registerActivityLifecycleCallbacks(new LifecycleAdapter() {
 
             @Override

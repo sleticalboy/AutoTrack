@@ -170,7 +170,7 @@ class MainActivity : AppCompatActivity() {
         flContainer.removeAllViews()
         val lv = ListView(this)
         val data = getData()
-        lv.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data)
+        lv.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, data)
         lv.setOnItemClickListener { _, _, position, _ ->
             ToastUtils.toast(this, "data: ${data[position]} pos: $position")
         }

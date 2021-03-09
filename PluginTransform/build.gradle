@@ -5,7 +5,6 @@ dependencies {
     implementation gradleApi()
     implementation localGroovy()
     implementation "com.android.tools.build:gradle:$rootProject.ext.gradle_version"
-    testImplementation 'junit:junit:4.13'
 }
 
 repositories {
