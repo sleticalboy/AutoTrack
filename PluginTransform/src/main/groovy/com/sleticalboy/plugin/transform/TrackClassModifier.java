@@ -61,7 +61,7 @@ public final class TrackClassModifier {
                 byte[] modifiedClsBytes = null;
                 if (jarEntry.getName().endsWith(".class")) {
                     clsName = jarEntry.getName().replace("/", ".").replace(".class", "");
-                    if (!Utils.excludes(clsName)) {
+                    if (Utils.includes(clsName)) {
                         modifiedClsBytes = modifyInternal(srcClsBytes);
                     }
                 }

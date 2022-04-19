@@ -8,15 +8,17 @@ import com.android.build.api.transform.QualifiedContent;
 import com.android.build.api.transform.Transform;
 import com.android.build.api.transform.TransformException;
 import com.android.build.api.transform.TransformInput;
+import com.android.build.api.transform.TransformInvocation;
 import com.android.build.api.transform.TransformOutputProvider;
 import com.android.build.gradle.internal.pipeline.TransformManager;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.Project;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -58,42 +60,42 @@ public final class TrackTransform extends Transform {
 
     @Override
     public boolean isIncremental() {
-        return false;
+        return true;
     }
 
-    @Override
-    public void transform(Context context, Collection<TransformInput> inputs,
-                   Collection<TransformInput> referencedInputs,
-                   TransformOutputProvider outputProvider, boolean isIncremental)
-            throws IOException {
+    @Override public void transform(TransformInvocation invocation)
+      throws TransformException, InterruptedException, IOException {
+        final Context context = invocation.getContext();
+        final boolean isIncremental = invocation.isIncremental();
+        final TransformOutputProvider outputProvider = invocation.getOutputProvider();
+        final Collection<TransformInput> inputs = invocation.getInputs();
         if (!isIncremental) outputProvider.deleteAll();
         Utils.log("-----------com.sleticalboy.plugin--------------");
         // Transform 的 inputs 有两种类型，一种是目录，一种是 jar 包，要分开遍历
         for (TransformInput input : inputs) {
             // 遍历目录
+            Utils.log("input dirs: " + input.getDirectoryInputs());
             for (DirectoryInput di : input.getDirectoryInputs()) {
-                // 当前这个 Transform 输出目录
-                File dest = outputProvider.getContentLocation(di.getName(), di.getContentTypes(),
-                        di.getScopes(), Format.DIRECTORY);
-
+                System.out.println("input dir: " + di.getFile());
                 if (di.getFile() == null || !di.getFile().isDirectory()) continue;
-                // 遍历以某一扩展名结尾的文件
-                File[] files = di.getFile().listFiles(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File file, String name) {
-                        return name.endsWith(".class");
-                    }
-                });
+                final List<File> targets = new ArrayList<>();
+                searchFiles(di.getFile(), targets);
                 HashMap<String, File> modifyMap = new HashMap<>();
-                for (File file : files) {
-                    if (!Utils.excludes(file.getName())) {
+                for (File file : targets) {
+                    // key 为包名 + 类名，如：/cn/sensorsdata/autotrack/android/app/MainActivity.class
+                    String key = file.getAbsolutePath().replace(di.getFile().getAbsolutePath(), "");
+                    Utils.log("might modify " + key);
+                    if (Utils.includes(key)) {
                         File modified = TrackClassModifier.modifyClass(di.getFile(), file, context.getTemporaryDir());
+                        Utils.log(" -> " + modified);
                         if (modified != null) {
-                            // key 为包名 + 类名，如：/cn/sensorsdata/autotrack/android/app/MainActivity.class
-                            modifyMap.put(file.getAbsolutePath().replace(di.getFile().getAbsolutePath(), ""), modified);
+                            modifyMap.put(key, modified);
                         }
                     }
                 }
+                // 当前这个 Transform 输出目录
+                File dest = outputProvider.getContentLocation(di.getName(), di.getContentTypes(),
+                  di.getScopes(), Format.DIRECTORY);
                 FileUtils.copyDirectory(di.getFile(), dest);
                 for (String key : modifyMap.keySet()) {
                     File file = modifyMap.get(key);
@@ -103,7 +105,9 @@ public final class TrackTransform extends Transform {
                     file.delete();
                 }
             }
+
             // 遍历 jar 包
+            Utils.log("input jars: " + input.getJarInputs());
             for (JarInput jar : input.getJarInputs()) {
                 String name = jar.getFile().getName();
                 // 获取 jar 名字
@@ -120,6 +124,20 @@ public final class TrackTransform extends Transform {
                 if (modified == null) modified = jar.getFile();
                 FileUtils.copyFile(modified, dest);
             }
+        }
+    }
+
+    // 遍历所有 .class 文件
+    private void searchFiles(File root, List<File> targets) {
+        if (root == null) return;
+        if (root.isDirectory()) {
+            final File[] files = root.listFiles();
+            if (files == null || files.length == 0) return;
+            for (File file : files) {
+                searchFiles(file, targets);
+            }
+        } else if (root.isFile() && root.getName().endsWith(".class")){
+            targets.add(root);
         }
     }
 }

@@ -1,8 +1,6 @@
 package com.sleticalboy.plugin.transform;
 
 
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -32,22 +30,25 @@ public class Utils {
         //no instance
     }
 
-    public static boolean excludes(String name) {
-        if (name == null) return true;
-        boolean result;
-        for (String exclude : EXCLUDES) {
-            if (name.startsWith(exclude)) continue;
-            result = !name.equals(ANDROIDX_INFLATER) && !name.equals(SUPPORT_INFLATER);
-            log("excludes: " + result + ' ' + name);
-            return result;
+    public static boolean includes(String name) {
+        if (name == null) return false;
+        // R 文件编译出的 class，忽略
+        if (R_BUILD_CONFIG.matcher(name).matches()) return false;
+        // 两个 inflater 不能忽略，兼容在 xml 文件中声明的点击事件
+        if (name.equals(ANDROIDX_INFLATER) || name.equals(SUPPORT_INFLATER)) {
+            log("white list includes: " + name);
+            return true;
         }
-        result = R_BUILD_CONFIG.matcher(name).matches();
-        log("excludes: " + result + ' ' + name);
-        return false;
+        // 黑名单中的全部忽略
+        for (String exclude : EXCLUDES) {
+            if (name.startsWith(exclude)) return false;
+        }
+        return true;
     }
 
     public static void log(String msg) {
-        DefaultGroovyMethods.println(msg);
+        // DefaultGroovyMethods.println(msg);
+        System.out.println(msg);
     }
 
     public static String toClassName(String path) {

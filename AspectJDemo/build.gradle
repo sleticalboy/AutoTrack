@@ -13,7 +13,7 @@ buildscript {
         // 让 as 使用 ajc 作为编译器编译代码
         classpath 'org.aspectj:aspectjtools:1.9.0'
         // 引入自定义插件
-        classpath "com.sleticalboy:autotrack.transform:1.0.0"
+        // classpath "com.sleticalboy:autotrack.transform:1.0.0"
     }
 }
 
@@ -21,7 +21,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 // 使用自定义插件
-apply plugin: 'com.sleticalboy.transform'
+// apply plugin: 'com.sleticalboy.transform'
 
 android {
     compileSdkVersion rootProject.ext.compile_version

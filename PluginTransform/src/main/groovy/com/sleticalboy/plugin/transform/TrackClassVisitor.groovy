@@ -12,7 +12,7 @@ import java.util.regex.Pattern
  *
  * @author leebin
  */
-class TrackClassVisitor extends ClassVisitor implements Opcodes {
+class TrackClassVisitor extends ClassVisitor {
 
     ///////////////// sdk api
     private static final String SDK_CLASS = "com/sleticalboy/autotrack/sdk/TrackSdk"
@@ -66,13 +66,14 @@ class TrackClassVisitor extends ClassVisitor implements Opcodes {
     private static final Pattern DYNAMIC_CLICK_LAMBDA = Pattern.compile(
             'lambda\\$*..*\\$\\d+\\(L*..*;Landroid/view/View;\\)V')
 
+    private static final int ASM_VERSION = Opcodes.ASM6
+
     private String[] interfaces
     private String clsName
 
     TrackClassVisitor(ClassVisitor cv) {
-        // api must be Opcodes.ASM5 or it'll throw IllegalArgumentException.
-        // 这里不能使用静态导入，否则会报错
-        super(Opcodes.ASM5, cv)
+        // api must be Opcodes.ASM6 or it'll throw IllegalArgumentException.
+        super(ASM_VERSION, cv)
     }
 
     /**
@@ -96,7 +97,7 @@ class TrackClassVisitor extends ClassVisitor implements Opcodes {
     MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
         final MethodVisitor visitor = super.visitMethod(access, name, desc, signature, exceptions)
         final String methodDesc = name + desc
-        return new AdviceAdapter(Opcodes.ASM5, visitor, access, name, desc) {
+        return new AdviceAdapter(ASM_VERSION, visitor, access, name, desc) {
 
             @Override
             protected void onMethodExit(int opcode) {
@@ -171,14 +172,5 @@ class TrackClassVisitor extends ClassVisitor implements Opcodes {
 
     private boolean hasInterface(String listener) {
         return Arrays.binarySearch(interfaces, listener) >= 0
-//        if (interfaces == null || interfaces.length == 0) {
-//            return false
-//        }
-//        for (String inter : interfaces) {
-//            if (listener == inter) {
-//                return true
-//            }
-//        }
-//        return false
     }
 }
