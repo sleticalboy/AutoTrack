@@ -31,6 +31,7 @@ public final class TrackTransform extends Transform {
 
     TrackTransform(Project project) {
         this.project = project;
+        MethodRecorder.get().prepare(project);
     }
 
     @Override

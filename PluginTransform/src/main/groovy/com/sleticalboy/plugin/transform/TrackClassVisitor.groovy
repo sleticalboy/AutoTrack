@@ -1,8 +1,6 @@
 package com.sleticalboy.plugin.transform
 
-import org.objectweb.asm.ClassVisitor
-import org.objectweb.asm.MethodVisitor
-import org.objectweb.asm.Opcodes
+import org.objectweb.asm.*
 import org.objectweb.asm.commons.AdviceAdapter
 
 import java.util.regex.Pattern
@@ -71,9 +69,24 @@ class TrackClassVisitor extends ClassVisitor {
     private String[] interfaces
     private String clsName
 
+    private final Set<String> trackedMethods = new HashSet<>()
+
     TrackClassVisitor(ClassVisitor cv) {
         // api must be Opcodes.ASM6 or it'll throw IllegalArgumentException.
         super(ASM_VERSION, cv)
+    }
+
+    @Override
+    AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
+        Utils.log("visitAnnotation() [class] " + descriptor + ", visible: " + visible)
+        return super.visitAnnotation(descriptor, visible)
+    }
+
+    @Override
+    AnnotationVisitor visitTypeAnnotation(int typeRef, TypePath typePath, String descriptor,
+      boolean visible) {
+        Utils.log("visitTypeAnnotation() " + descriptor + ", typePath: " + typePath)
+        return super.visitTypeAnnotation(typeRef, typePath, descriptor, visible)
     }
 
     /**
@@ -94,10 +107,24 @@ class TrackClassVisitor extends ClassVisitor {
     }
 
     @Override
+    void visitEnd() {
+        super.visitEnd()
+        MethodRecorder.get().record(trackedMethods)
+    }
+
+    @Override
     MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+        Utils.log("visitMethod() $clsName#$name$desc")
+        trackedMethods.add(clsName + "#" + name + desc)
         final MethodVisitor visitor = super.visitMethod(access, name, desc, signature, exceptions)
         final String methodDesc = name + desc
         return new AdviceAdapter(ASM_VERSION, visitor, access, name, desc) {
+
+            @Override
+            AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
+                Utils.log("visitAnnotation() [method] " + descriptor + ", visible: " + visible)
+                return super.visitAnnotation(descriptor, visible)
+            }
 
             @Override
             protected void onMethodExit(int opcode) {
