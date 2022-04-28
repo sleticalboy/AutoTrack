@@ -6,7 +6,7 @@ buildscript {
         build_version = '29.0.3'
         min_version = 19
         target_version = 29
-        kotlin_version = '1.4.10'
+        kotlin_version = '1.6.20'
         gradle_version = '4.1.2'
         appcompat_version = '1.2.0'
         ktx_version = '1.3.2'
@@ -17,7 +17,7 @@ buildscript {
     }
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$rootProject.ext.gradle_version"
@@ -30,7 +30,7 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 }
 

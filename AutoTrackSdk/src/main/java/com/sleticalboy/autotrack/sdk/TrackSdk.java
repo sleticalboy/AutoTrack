@@ -59,7 +59,7 @@ public final class TrackSdk {
     }
 
     @SuppressWarnings("UsedForASM")
-    public static void autoTrack(AdapterView adapterView, View view, int position) {
+    public static void autoTrack(AdapterView<?> adapterView, View view, int position) {
         sendTrackMessage(new SomeArgs(adapterView, view, position, NULL));
     }
 
@@ -90,7 +90,7 @@ public final class TrackSdk {
             }
         } else if (arg3 == NULL) {
             if (obj instanceof AdapterView && arg1 instanceof View && arg2 instanceof Integer) {
-                onAdapterViewItem$((AdapterView) obj/*adapterVew*/, (View) arg1/*View*/, (Integer) arg2/*position*/);
+                onAdapterViewItem$((AdapterView<?>) obj/*adapterVew*/, (View) arg1/*View*/, (Integer) arg2/*position*/);
             } else if (obj instanceof DialogInterface && arg1 instanceof Integer && arg2 instanceof Boolean) {
                 onDialogItem$((DialogInterface) obj/*dialog*/, (Integer) arg1/*which*/, (Boolean) arg2/*isChecked*/);
             }
