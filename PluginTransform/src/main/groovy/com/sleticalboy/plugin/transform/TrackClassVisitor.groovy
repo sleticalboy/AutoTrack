@@ -115,7 +115,7 @@ class TrackClassVisitor extends ClassVisitor {
     @Override
     MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
         Utils.log("visitMethod() $clsName#$name$desc")
-        trackedMethods.add(clsName + "#" + name + desc)
+        trackedMethods.add(access + "#" + clsName + "#" + name + desc)
         final MethodVisitor visitor = super.visitMethod(access, name, desc, signature, exceptions)
         final String methodDesc = name + desc
         return new AdviceAdapter(ASM_VERSION, visitor, access, name, desc) {
