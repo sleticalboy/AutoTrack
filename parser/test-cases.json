@@ -1,0 +1,593 @@
+[
+  {
+    "returns": "V",
+    "cls": "androidx.appcompat.app.AppCompatViewInflater%24DeclaredOnClickListener",
+    "method": "onClick",
+    "params": [
+      "Landroid.view.View"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "androidx.appcompat.app.AppCompatViewInflater%24DeclaredOnClickListener",
+    "method": "resolveMethod",
+    "params": [
+      "Landroid.content.Context"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "androidx.appcompat.app.AppCompatViewInflater%24DeclaredOnClickListener",
+    "method": "<init>",
+    "params": [
+      "Landroid.view.View",
+      "Ljava.lang.String"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R%24id",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R%24layout",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R%24mipmap",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R%24drawable",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R%24style",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R%24color",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R%24animator",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R%24xml",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R%24bool",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R%24interpolator",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R%24menu",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R%24integer",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R%24attr",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R%24dimen",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R%24string",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R%24plurals",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R%24anim",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R%24styleable",
+    "method": "<clinit>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.R%24styleable",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackActivity%242",
+    "method": "<init>",
+    "params": [
+      "Lcom.sleticalboy.transform.TrackActivity"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackActivity%242",
+    "method": "onCheckedChanged",
+    "params": [
+      "Landroid.widget.CompoundButton",
+      "Z"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackActivity%241",
+    "method": "onClick",
+    "params": [
+      "Landroid.view.View"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackActivity%241",
+    "method": "<init>",
+    "params": [
+      "Lcom.sleticalboy.transform.TrackActivity"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.ToastUtils",
+    "method": "toastLong",
+    "params": [
+      "Landroid.content.Context",
+      "Ljava.lang.CharSequence"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.ToastUtils",
+    "method": "toast",
+    "params": [
+      "Landroid.content.Context",
+      "Ljava.lang.CharSequence"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.ToastUtils",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "Ljava.lang.Void;",
+    "cls": "com.sleticalboy.transform.ToastUtils",
+    "method": "foo4",
+    "params": []
+  },
+  {
+    "returns": "[I",
+    "cls": "com.sleticalboy.transform.ToastUtils",
+    "method": "foo3",
+    "params": [
+      "Ljava.lang.Void"
+    ]
+  },
+  {
+    "returns": "[Ljava.util.List;",
+    "cls": "com.sleticalboy.transform.ToastUtils",
+    "method": "foo2",
+    "params": []
+  },
+  {
+    "returns": "Ljava.util.List;",
+    "cls": "com.sleticalboy.transform.ToastUtils",
+    "method": "foo",
+    "params": [
+      "C",
+      "I",
+      "S",
+      "B",
+      "Z",
+      "F",
+      "D",
+      "J",
+      "[Ljava.lang.String;",
+      "[I"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackActivity",
+    "method": "createDialog",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackActivity",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackActivity",
+    "method": "toast",
+    "params": [
+      "Ljava.lang.CharSequence"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackActivity",
+    "method": "xmlClick",
+    "params": [
+      "Landroid.view.View"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackActivity",
+    "method": "dynamicAddView",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackActivity",
+    "method": "onCreate",
+    "params": [
+      "Landroid.os.Bundle"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackActivity%245",
+    "method": "onClick",
+    "params": [
+      "Landroid.content.DialogInterface",
+      "I",
+      "Z"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackActivity%245",
+    "method": "<init>",
+    "params": [
+      "Lcom.sleticalboy.transform.TrackActivity",
+      "[Ljava.lang.CharSequence;"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackActivity%246",
+    "method": "onClick",
+    "params": [
+      "Landroid.content.DialogInterface",
+      "I"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackActivity%246",
+    "method": "<init>",
+    "params": [
+      "Lcom.sleticalboy.transform.TrackActivity"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.BuildConfig",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.BuildConfig",
+    "method": "<clinit>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackActivity%243",
+    "method": "<init>",
+    "params": [
+      "Lcom.sleticalboy.transform.TrackActivity"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackActivity%243",
+    "method": "onItemClick",
+    "params": [
+      "Landroid.widget.AdapterView",
+      "Landroid.view.View",
+      "I",
+      "J"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackActivity%244",
+    "method": "onClick",
+    "params": [
+      "Landroid.view.View"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackActivity%244",
+    "method": "<init>",
+    "params": [
+      "Lcom.sleticalboy.transform.TrackActivity",
+      "Landroid.widget.Button"
+    ]
+  },
+  {
+    "returns": "Ljava.util.List;",
+    "cls": "ApiParser",
+    "method": "parse",
+    "params": [
+      "Ljava.lang.String"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "ApiParser",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.MainActivity%24addGridView%241",
+    "method": "<init>",
+    "params": [
+      "Lcom.sleticalboy.transform.MainActivity",
+      "[Ljava.lang.Integer;"
+    ]
+  },
+  {
+    "returns": "Landroid.view.View;",
+    "cls": "com.sleticalboy.transform.MainActivity%24addGridView%241",
+    "method": "getView",
+    "params": [
+      "I",
+      "Landroid.view.View",
+      "Landroid.view.ViewGroup"
+    ]
+  },
+  {
+    "returns": "Ljava.lang.Integer;",
+    "cls": "com.sleticalboy.transform.MainActivity%24addGridView%241",
+    "method": "getItem",
+    "params": [
+      "I"
+    ]
+  },
+  {
+    "returns": "J",
+    "cls": "com.sleticalboy.transform.MainActivity%24addGridView%241",
+    "method": "getItemId",
+    "params": [
+      "I"
+    ]
+  },
+  {
+    "returns": "I",
+    "cls": "com.sleticalboy.transform.MainActivity%24addGridView%241",
+    "method": "getCount",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.SimpleArrayAdapter",
+    "method": "onBindViewHolder",
+    "params": [
+      "Lcom.sleticalboy.transform.SimpleViewHolder",
+      "I"
+    ]
+  },
+  {
+    "returns": "I",
+    "cls": "com.sleticalboy.transform.SimpleArrayAdapter",
+    "method": "getItemCount",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.SimpleArrayAdapter",
+    "method": "<init>",
+    "params": [
+      "Ljava.util.List"
+    ]
+  },
+  {
+    "returns": "Lcom.sleticalboy.transform.SimpleViewHolder;",
+    "cls": "com.sleticalboy.transform.SimpleArrayAdapter",
+    "method": "onCreateViewHolder",
+    "params": [
+      "Landroid.view.ViewGroup",
+      "I"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.SimpleViewHolder",
+    "method": "<init>",
+    "params": [
+      "Landroid.view.View"
+    ]
+  },
+  {
+    "returns": "Ljava.lang.String;",
+    "cls": "com.sleticalboy.transform.bean.Image",
+    "method": "toString",
+    "params": []
+  },
+  {
+    "returns": "Ljava.lang.CharSequence;",
+    "cls": "com.sleticalboy.transform.bean.Image",
+    "method": "format",
+    "params": []
+  },
+  {
+    "returns": "I",
+    "cls": "com.sleticalboy.transform.bean.Image",
+    "method": "hashCode",
+    "params": []
+  },
+  {
+    "returns": "Z",
+    "cls": "com.sleticalboy.transform.bean.Image",
+    "method": "equals",
+    "params": [
+      "Ljava.lang.Object"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.bean.Image",
+    "method": "<init>",
+    "params": [
+      "Landroid.net.Uri",
+      "Ljava.lang.String",
+      "Ljava.lang.Integer"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackFragment%24Companion",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.MainActivity",
+    "method": "_$_clearFindViewByIdCache",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.MainActivity",
+    "method": "onCreate",
+    "params": [
+      "Landroid.os.Bundle"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.MainActivity",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "Z",
+    "cls": "com.sleticalboy.transform.MainActivity",
+    "method": "onCreateOptionsMenu",
+    "params": [
+      "Landroid.view.Menu"
+    ]
+  },
+  {
+    "returns": "Z",
+    "cls": "com.sleticalboy.transform.MainActivity",
+    "method": "onOptionsItemSelected",
+    "params": [
+      "Landroid.view.MenuItem"
+    ]
+  },
+  {
+    "returns": "Landroid.view.View;",
+    "cls": "com.sleticalboy.transform.MainActivity",
+    "method": "_$_findCachedViewById",
+    "params": [
+      "I"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackFragment",
+    "method": "<init>",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackFragment",
+    "method": "_$_clearFindViewByIdCache",
+    "params": []
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackFragment",
+    "method": "onViewCreated",
+    "params": [
+      "Landroid.view.View",
+      "Landroid.os.Bundle"
+    ]
+  },
+  {
+    "returns": "Landroid.view.View;",
+    "cls": "com.sleticalboy.transform.TrackFragment",
+    "method": "_$_findCachedViewById",
+    "params": [
+      "I"
+    ]
+  },
+  {
+    "returns": "V",
+    "cls": "com.sleticalboy.transform.TrackFragment",
+    "method": "<clinit>",
+    "params": []
+  },
+  {
+    "returns": "Landroid.view.View;",
+    "cls": "com.sleticalboy.transform.TrackFragment",
+    "method": "onCreateView",
+    "params": [
+      "Landroid.view.LayoutInflater",
+      "Landroid.view.ViewGroup",
+      "Landroid.os.Bundle"
+    ]
+  }
+]

@@ -2,3 +2,4 @@ include ':AutoTrackSdk',
         ':AspectJDemo', ':PluginAspectJ',
         ':PluginTransform', ':TransformDemo'
 rootProject.name = 'AutoTrack'
+include ':parser'
