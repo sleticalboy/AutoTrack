@@ -7,13 +7,14 @@ package com.sleticalboy.plugin.transform;
  */
 public final class MethodRecorder {
 
-  private static IMethodRecorder sRecorder;
+  private static final IMethodRecorder sRecorder;
+
+  static {
+    // sRecorder = new FileWriterRecorder();
+    sRecorder = new FileChannelRecorder();
+  }
 
   public static IMethodRecorder get() {
-    if (sRecorder == null) {
-      // sRecorder = new FileWriterRecorder();
-      sRecorder = new FileChannelRecorder();
-    }
     return sRecorder;
   }
 }

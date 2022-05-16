@@ -17,7 +17,7 @@ repositories {
 uploadArchives {
     repositories.mavenDeployer {
         // local repo
-        repository(url: uri("$rootDir/repo"))
+        repository(url: uri("${local_repo_dir}/repo"))
         // groupId
         pom.groupId = 'com.sleticalboy'
         // artifactId

@@ -89,7 +89,7 @@ final class Entry {
             i = endIndex;
           } else {
             // 基本数据类型
-            paramList.add("" + c);
+            paramList.add(params.substring(i, i + 1));
           }
         }
       }

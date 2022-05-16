@@ -32,7 +32,7 @@ public final class ApiParser {
     }
   }
 
-  public List<Entry> parse(String path) throws IOException, ClassNotFoundException {
+  public List<Entry> parse(String path) throws IOException {
     final List<Entry> entries = new ArrayList<>();
     // 解析文件，逐行读取
     final BufferedReader reader = new BufferedReader(new FileReader(path));

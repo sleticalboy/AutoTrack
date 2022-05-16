@@ -1,13 +1,17 @@
 
 buildscript {
     repositories {
-        maven {url '../repo'}
+        maven {
+            url(uri("${local_repo_dir}/repo"))
+        }
         google()
         jcenter()
     }
     dependencies {
         // 引入自定义插件
-        classpath "com.sleticalboy:autotrack.transform:1.0.0"
+        classpath("com.sleticalboy:autotrack.transform:1.0.0") {
+            // throw new RuntimeException("???")
+        }
     }
 }
 

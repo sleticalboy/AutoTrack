@@ -7,6 +7,7 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
+import java.util.regex.Pattern;
 import org.gradle.api.Project;
 
 /**
@@ -19,6 +20,8 @@ public class FileChannelRecorder implements IMethodRecorder {
   private Project mProject;
   private FileChannel mChannel;
   private long mPos;
+  // 过滤 R 或者 BR 类
+  private static final Pattern PATTERN = Pattern.compile(".*/B?R[$|#].*");
 
   @Override public void prepare(Project project) {
     mProject = project;
@@ -48,6 +51,7 @@ public class FileChannelRecorder implements IMethodRecorder {
     System.out.println("FileChannelRecorder.record() " + mChannel);
     final StringBuilder lines = new StringBuilder();
     for (String method : records) {
+      if (PATTERN.matcher(method).matches()) continue;
       lines.append(method).append('\n');
     }
     try {

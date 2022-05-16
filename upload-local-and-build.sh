@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 
-./gradlew :PluginTransform:uploadArchives
-./gradlew clean
-./gradlew :TransformDemo:assembleDebug
+./gradlew :PluginTransform:uploadArchives --console=rich
+./gradlew clean --console=rich
+./gradlew :TransformDemo:assembleDebug --console=rich
 
 # launch app
 adb shell am start -n \
