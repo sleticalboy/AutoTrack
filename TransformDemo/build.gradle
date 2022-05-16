@@ -5,7 +5,7 @@ buildscript {
             url(uri("${local_repo_dir}/repo"))
         }
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         // 引入自定义插件
