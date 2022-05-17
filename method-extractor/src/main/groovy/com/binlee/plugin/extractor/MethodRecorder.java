@@ -12,6 +12,7 @@ public final class MethodRecorder {
   private static BaseMethodRecorder sRecorder;
 
   public static synchronized void init(Project project) {
+    Utils.log("MethodRecorder#init() " + project);
     if (sRecorder != null) return;
     // sRecorder = new FileWriterRecorder(project);
     sRecorder = new FileChannelRecorder(project);

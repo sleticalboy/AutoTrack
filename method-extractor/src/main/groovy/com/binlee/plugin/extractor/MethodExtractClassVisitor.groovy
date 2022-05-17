@@ -21,14 +21,14 @@ class MethodExtractClassVisitor extends ClassVisitor {
 
   @Override
   AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
-    Utils.log("visitAnnotation() [class] " + descriptor + ", visible: " + visible)
+    // Utils.log("visitAnnotation() [class] " + descriptor + ", visible: " + visible)
     return super.visitAnnotation(descriptor, visible)
   }
 
   @Override
   AnnotationVisitor visitTypeAnnotation(int typeRef, TypePath typePath, String descriptor,
     boolean visible) {
-    Utils.log("visitTypeAnnotation() " + descriptor + ", typePath: " + typePath)
+    // Utils.log("visitTypeAnnotation() " + descriptor + ", typePath: " + typePath)
     return super.visitTypeAnnotation(typeRef, typePath, descriptor, visible)
   }
 
@@ -59,7 +59,7 @@ class MethodExtractClassVisitor extends ClassVisitor {
   @Override
   MethodVisitor visitMethod(int access, String name, String desc, String signature,
     String[] exceptions) {
-    Utils.log("visitMethod() $clsName#$name$desc")
+    // Utils.log("visitMethod() $clsName#$name$desc")
     MethodRecorder.get().record(access + "#" + clsName + "#" + name + desc)
     return super.visitMethod(access, name, desc, signature, exceptions)
   }

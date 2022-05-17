@@ -26,6 +26,8 @@ public class Utils {
             "org.jetbrains.", "com.google.android.", "com.sleticalboy.autotrack."
     ));
 
+    private static boolean sDebug = false;
+
     private Utils() {
         //no instance
     }
@@ -46,8 +48,11 @@ public class Utils {
         return true;
     }
 
+    public static void setDebug(boolean debug) {
+        sDebug = debug;
+    }
+
     public static void log(String msg) {
-        // DefaultGroovyMethods.println(msg);
-        System.out.println(msg);
+        if (sDebug) System.out.println(msg);
     }
 }

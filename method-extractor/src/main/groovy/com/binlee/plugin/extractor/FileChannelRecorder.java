@@ -24,7 +24,7 @@ public class FileChannelRecorder extends BaseMethodRecorder {
 
   @Override protected void writeToFile(String content, File file) {
     ensureChannel(file);
-    System.out.println("FileChannelRecorder.record() " + mChannel);
+    // Utils.log("FileChannelRecorder.writeToFile() " + mChannel);
     try {
       MappedByteBuffer buf = mChannel.map(FileChannel.MapMode.READ_WRITE, mPos, content.length());
       buf.put(content.getBytes(StandardCharsets.UTF_8));
@@ -37,15 +37,15 @@ public class FileChannelRecorder extends BaseMethodRecorder {
 
   private void ensureChannel(File file) {
     if (mChannel != null) return;
-    System.out.println("FileChannelRecorder.prepare() " + file + ", exist: " + file.exists());
+    Utils.log("FileChannelRecorder.ensureChannel() " + file + ", exist: " + file.exists());
     try {
       if (file.exists() && file.delete()) {
-        System.out.println("FileChannelRecorder.prepare() delete old file");
+        Utils.log("FileChannelRecorder.ensureChannel() delete old file");
       }
       if (file.createNewFile()) {
         mChannel = FileChannel.open(file.toPath());
         mChannel = new RandomAccessFile(file, "rw").getChannel();
-        System.out.println("FileChannelRecorder.prepare() create new file");
+        Utils.log("FileChannelRecorder.ensureChannel() create new file");
       }
     } catch (IOException e) {
       e.printStackTrace();

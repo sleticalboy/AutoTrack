@@ -17,13 +17,13 @@ import java.util.Set;
 
 public final class MethodScanTransform extends Transform {
 
-    MethodScanTransform(Project project) {
+    public void init(Project project) {
         MethodRecorder.init(project);
     }
 
     @Override
     public String getName() {
-        return "methodExtractor";
+        return "MethodExtractor";
     }
 
     @Override
@@ -97,5 +97,9 @@ public final class MethodScanTransform extends Transform {
         } else if (file.isFile() && file.getName().endsWith(".class")){
             targets.add(file);
         }
+    }
+
+    @Override public String toString() {
+        return getName();
     }
 }
