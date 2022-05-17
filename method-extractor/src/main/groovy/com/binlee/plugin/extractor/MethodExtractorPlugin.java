@@ -23,9 +23,10 @@ public final class MethodExtractorPlugin implements Plugin<Project> {
             // task: transformClassesWithMethodExtractorForRelease
             for (Task task : project.getTasks()) {
                 if (task.getName().contains(transform.getName())) {
-                    Utils.log("MethodExtractorPlugin#afterEvaluate() -->" + task.getName());
+                    Utils.log("MethodExtractorPlugin#afterEvaluate() --> " + task.getName());
                     // 永不过时，不可以重用
                     task.getOutputs().upToDateWhen(t -> false);
+                    task.doLast(t -> MethodRecorder.get().doLast());
                 }
             }
         });

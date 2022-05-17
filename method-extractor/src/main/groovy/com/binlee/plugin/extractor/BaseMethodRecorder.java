@@ -1,13 +1,19 @@
 package com.binlee.plugin.extractor;
 
+import com.example.parser.ApiParser;
+import com.example.parser.Entry;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+import org.apache.commons.io.FileUtils;
 import org.gradle.api.Project;
+import org.json.JSONArray;
 
 /**
  * Created on 2022/4/28
@@ -91,4 +97,22 @@ public abstract class BaseMethodRecorder {
   }
 
   protected abstract void writeToFile(String content, File file);
+
+  public final void doLast() {
+    Utils.log("BaseMethodRecorder#doLast() " + mFile);
+    try {
+      final List<Entry> entries = new ApiParser().parseFile(mFile.getAbsolutePath());
+      final JSONArray array = new JSONArray(entries);
+      Utils.log("entries.size: " + array.length());
+      // Utils.log("BaseMethodRecorder#doLast() \n" + array);
+      final File file = mProject.file(mFile.getAbsolutePath() + ".json");
+      if (file.exists()) file.delete();
+      if (!file.exists()) file.createNewFile();
+      FileUtils.copyInputStreamToFile(
+        new ByteArrayInputStream(array.toString().getBytes(StandardCharsets.UTF_8)), file);
+      Utils.log(file + " size: " + file.length());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 }

@@ -5,9 +5,12 @@ dependencies {
     implementation gradleApi()
     implementation localGroovy()
     implementation "com.android.tools.build:gradle:$rootProject.ext.gradle_version"
+    // implementation(project(":parser"))
+    implementation("com.binlee:method.parser:1.0.0")
 }
 
 repositories {
+    maven { url(uri("${local_repo_dir}/repo")) }
     google()
     mavenCentral()
 }

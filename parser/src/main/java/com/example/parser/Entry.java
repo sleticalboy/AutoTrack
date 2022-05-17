@@ -1,10 +1,8 @@
 package com.example.parser;
 
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -12,30 +10,22 @@ import org.json.JSONObject;
  *
  * @author binlee
  */
-final class Entry {
+public final class Entry extends JSONObject {
 
-  private final Map<String, Object> mFields;
+  // private final Map<String, Object> mFields;
 
   private Entry(String cls, String method, List<String> paramList, String returns) {
-    mFields = new HashMap<String, Object>() {
-      {
-        put("cls", cls.replace("$", "%24"));
-        put("method", method);
-        put("params", paramList);
-        put("returns", returns);
-      }
-
-      @Override public Object put(String key, Object value) {
-        return key == null ? null : super.put(key, value);
-      }
-    };
+    put("cls", cls.replace("$", "%24"));
+    put("method", method);
+    put("params", paramList);
+    put("returns", returns);
   }
 
-  @Override public String toString() {
-    return new JSONObject(mFields).toString();
+  @Override public JSONObject put(String key, Object value) throws JSONException {
+    return key == null ? this : super.put(key, value);
   }
 
-  static Entry get(String line) {
+  static Entry parse(String line) {
     int index, start;
     // 访问修饰符
     index = line.indexOf('#');

@@ -15,7 +15,7 @@ public final class ApiParser {
 
   public static void main(String[] args) throws Exception {
     try {
-      final List<Entry> list = new ApiParser().parse(args[0]);
+      final List<Entry> list = new ApiParser().parseFile(args[0]);
       System.out.println(list);
     } catch (IOException e) {
       e.printStackTrace();
@@ -32,7 +32,7 @@ public final class ApiParser {
     }
   }
 
-  public List<Entry> parse(String path) throws IOException {
+  public List<Entry> parseFile(String path) throws IOException {
     final List<Entry> entries = new ArrayList<>();
     // 解析文件，逐行读取
     final BufferedReader reader = new BufferedReader(new FileReader(path));
@@ -41,7 +41,7 @@ public final class ApiParser {
     Entry entry;
     while ((line = reader.readLine()) != null && (line = line.trim()).length() != 0) {
       System.out.println("line = " + line);
-      if ((entry = Entry.get(line)) != null) entries.add(entry);
+      if ((entry = Entry.parse(line)) != null) entries.add(entry);
     }
     return entries;
   }

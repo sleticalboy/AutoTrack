@@ -52,7 +52,7 @@ public class Utils {
         sDebug = debug;
     }
 
-    public static void log(String msg) {
+    public static void log(Object msg) {
         if (sDebug) System.out.println(msg);
     }
 }

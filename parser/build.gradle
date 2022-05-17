@@ -1,5 +1,15 @@
 plugins {
   id 'java-library'
+  id 'maven'
+}
+
+dependencies {
+  implementation 'org.json:json:20180813'
+}
+
+repositories {
+  google()
+  mavenCentral()
 }
 
 java {
@@ -7,6 +17,17 @@ java {
   targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-dependencies {
-  implementation 'org.json:json:20180813'
+// 如何发布到远程仓库 https://www.jianshu.com/p/376ae605ebf1
+// 发布到本地仓库
+uploadArchives {
+  repositories.mavenDeployer {
+    // local repo
+    repository(url: uri("${local_repo_dir}/repo"))
+    // groupId
+    pom.groupId = 'com.binlee'
+    // artifactId
+    pom.artifactId = 'method.parser'
+    // plugin version
+    pom.version = '1.0.0'
+  }
 }
