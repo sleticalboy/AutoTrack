@@ -26,6 +26,7 @@ public final class MethodExtractorPlugin implements Plugin<Project> {
                     Utils.log("MethodExtractorPlugin#afterEvaluate() --> " + task.getName());
                     // 永不过时，不可以重用
                     task.getOutputs().upToDateWhen(t -> false);
+                    task.doFirst(t -> MethodRecorder.get().doFirst());
                     task.doLast(t -> MethodRecorder.get().doLast());
                 }
             }

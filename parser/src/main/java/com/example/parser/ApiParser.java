@@ -16,17 +16,17 @@ public final class ApiParser {
   public static void main(String[] args) throws Exception {
     try {
       final List<Entry> list = new ApiParser().parseFile(args[0]);
-      System.out.println(list);
+      Util.log(list);
     } catch (IOException e) {
       e.printStackTrace();
     }
     try {
       // 在 java 层通过这种方式可以找到类
-      System.out.println("(\"[I\") = " + Class.forName("[I"));
-      System.out.println("(\"[B\") = " + Class.forName("[B"));
-      System.out.println("(\"[Ljava.lang.String;\") = " + Class.forName("[Ljava.lang.String;"));
-      System.out.println("(\"java.util.List\") = " + Class.forName("java.util.List"));
-      System.out.println(String[].class);
+      Util.log("(\"[I\") = " + Class.forName("[I"));
+      Util.log("(\"[B\") = " + Class.forName("[B"));
+      Util.log("(\"[Ljava.lang.String;\") = " + Class.forName("[Ljava.lang.String;"));
+      Util.log("(\"java.util.List\") = " + Class.forName("java.util.List"));
+      Util.log(String[].class);
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     }
@@ -40,7 +40,7 @@ public final class ApiParser {
     // 9#com/sleticalboy/transform/ToastUtils#toast(Landroid/content/Context;Ljava/lang/CharSequence;)V
     Entry entry;
     while ((line = reader.readLine()) != null && (line = line.trim()).length() != 0) {
-      System.out.println("line = " + line);
+      Util.log("line = " + line);
       if ((entry = Entry.parse(line)) != null) entries.add(entry);
     }
     return entries;

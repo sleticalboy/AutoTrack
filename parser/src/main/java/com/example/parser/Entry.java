@@ -35,13 +35,13 @@ public final class Entry extends JSONObject {
     // 类名
     start = index + 1;
     index = line.indexOf('#', index + 1);
-    final String cls = line.substring(start, index).replace('/', '.');
-    System.out.println("cls = " + cls);
+    final String cls = Util.substring(line, start, index);
+    Util.log("cls = " + cls);
     // 方法名
     start = index + 1;
     index = line.indexOf('(', start);
     final String method = line.substring(start, index);
-    System.out.println("method = " + method);
+    Util.log("method = " + method);
     final List<String> paramList = new ArrayList<>();
     // 方法参数列表：Landroid/content/Context;Ljava/lang/CharSequence;
     // void foo(char c, int i, short s, byte b, boolean bool, float f, double d, long l) {}
@@ -53,7 +53,7 @@ public final class Entry extends JSONObject {
     index = line.indexOf(')', start);
     if (start != index) {
       final String params = line.substring(start, index);
-      System.out.println("params = " + params);
+      Util.log("params = " + params);
       for (int i = 0; i < params.length(); i++) {
         char c = params.charAt(i);
         if (c == '[') {
@@ -61,9 +61,9 @@ public final class Entry extends JSONObject {
           if (params.charAt(i + 1) == 'L') {
             // 引用类型，从当前位置直接找下一个 ';'
             final int endIndex = params.indexOf(';', i);
-            String clazz = params.substring(i, endIndex + 1).replace('/', '.');
+            String clazz = Util.substring(params, i, endIndex + 1);
             paramList.add(clazz);
-            System.out.println("param clazz = " + clazz);
+            Util.log("param clazz = " + clazz);
             i = endIndex;
           } else {
             paramList.add(params.substring(i, i + 2));
@@ -73,9 +73,9 @@ public final class Entry extends JSONObject {
           if (c == 'L') {
             // 引用类型，从当前位置直接找下一个 ';'
             final int endIndex = params.indexOf(';', i);
-            String clazz = params.substring(i, endIndex).replace('/', '.');
+            String clazz = Util.substring(params, i, endIndex);
             paramList.add(clazz);
-            System.out.println("param clazz = " + clazz);
+            Util.log("param clazz = " + clazz);
             i = endIndex;
           } else {
             // 基本数据类型
@@ -86,7 +86,7 @@ public final class Entry extends JSONObject {
     }
     // 方法返回值类型
     final String returns = line.substring(index + 1).replace('/', '.');
-    System.out.println("returns = " + returns);
+    Util.log("returns = " + returns);
     return new Entry(cls, method, paramList, returns);
   }
 }

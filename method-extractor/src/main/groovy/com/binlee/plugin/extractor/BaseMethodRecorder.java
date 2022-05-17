@@ -29,13 +29,18 @@ public abstract class BaseMethodRecorder {
     Pattern.compile(".*/B?R[$|#].*"),
     // 过滤 BuildConfig 类
     Pattern.compile(".*/BuildConfig.*"),
+    // 过滤静态代码块
+    Pattern.compile(".*<clinit>.*"),
+    // 过滤匿名内部类 MainActivity$2
+    Pattern.compile(".*\\$\\d.*"),
     Pattern.compile(".*com/afollestad/materialdialogs/.*"),
     Pattern.compile(".*com/androidnetworking/.*"),
     Pattern.compile(".*me/zhanghai/android/materialprogressbar/.*"),
     Pattern.compile(".*androidx/.*"),
     Pattern.compile(".*kotlinx?/.*"),
     Pattern.compile(".*io/reactivex/.*"),
-    Pattern.compile(".*retrofit2?/")
+    Pattern.compile(".*retrofit2?/"),
+    Pattern.compile(".*okhttp3?/")
     ));
   private final Set<String> mRecordedMethods = new HashSet<>();
   private File mFile;
@@ -66,26 +71,6 @@ public abstract class BaseMethodRecorder {
   }
 
   public void flush() {
-    synchronized (mRecordedMethods) {
-      if (!hasConfigured) {
-        // final File file = mProject.file("build/tracked-methods.txt");
-        final File file = mFile;
-        System.out.println("BaseMethodRecorder.flush() " + file + ", exist: " + file.exists());
-        try {
-          if (file.exists() && file.delete()) {
-            System.out.println("BaseMethodRecorder.flush() delete old file");
-          }
-          if (file.createNewFile()) {
-            System.out.println("BaseMethodRecorder.flush() create new file");
-          }
-          mFile = file;
-        } catch (IOException e) {
-          e.printStackTrace();
-          return;
-        }
-        hasConfigured = true;
-      }
-    }
     final StringBuilder lines = new StringBuilder();
     synchronized (mRecordedMethods) {
       for (String method : mRecordedMethods) {
@@ -97,6 +82,21 @@ public abstract class BaseMethodRecorder {
   }
 
   protected abstract void writeToFile(String content, File file);
+
+  public void doFirst() {
+    final File file = mFile == null ? mProject.file("build/tracked-methods.txt") : mFile;
+    try {
+      if (file.exists() && file.delete()) {
+        Utils.log("BaseMethodRecorder.doFirst() delete old file");
+      }
+      if (file.createNewFile()) {
+        Utils.log("BaseMethodRecorder.doFirst() create new file");
+      }
+      mFile = file;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
   public final void doLast() {
     Utils.log("BaseMethodRecorder#doLast() " + mFile);
