@@ -1,0 +1,29 @@
+plugins {
+  id 'java-library'
+  id 'maven'
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+  compileOnly 'com.google.auto.service:auto-service-annotations:1.0'
+  annotationProcessor 'com.google.auto.service:auto-service:1.0'
+}
+
+// 如何发布到远程仓库 https://www.jianshu.com/p/376ae605ebf1
+// 发布到本地仓库
+uploadArchives {
+  repositories.mavenDeployer {
+    // local repo
+    repository(url: uri("${local_repo_dir}/repo"))
+    // groupId
+    pom.groupId = 'com.binlee'
+    // artifactId
+    pom.artifactId = 'javadoc.processor'
+    // plugin version
+    pom.version = '1.0.0'
+  }
+}
