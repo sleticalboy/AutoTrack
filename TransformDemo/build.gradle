@@ -1,17 +1,15 @@
 
 buildscript {
     repositories {
-        maven {
-            url(uri("${local_repo_dir}/repo"))
-        }
         google()
         mavenCentral()
+        maven {
+            url(uri("$local_repo_dir"))
+        }
     }
     dependencies {
         // 引入自定义插件
-        classpath("com.sleticalboy:autotrack.transform:1.0.0") {
-            // throw new RuntimeException("???")
-        }
+        classpath("com.sleticalboy:autotrack.transform:1.0.1")
     }
 }
 
@@ -24,7 +22,6 @@ apply plugin: 'com.sleticalboy.transform'
 
 android {
     compileSdkVersion rootProject.ext.compile_version
-    buildToolsVersion rootProject.ext.build_version
 
     defaultConfig {
         applicationId "com.sleticalboy.transform"
@@ -58,6 +55,8 @@ dependencies {
     implementation "com.google.android.material:material:$material_version"
 
     implementation project(":AutoTrackSdk")
-    annotationProcessor(project(':javadoc-processor'))
-    kapt(project(':javadoc-processor'))
+    // annotationProcessor(project(':javadoc-processor'))
+    // kapt(project(':javadoc-processor'))
+    annotationProcessor("com.binlee:javadoc.processor:1.0.1")
+    kapt("com.binlee:javadoc.processor:1.0.1")
 }

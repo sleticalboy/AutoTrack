@@ -1,18 +1,15 @@
 apply plugin: 'groovy'
-apply plugin: 'maven'
+// apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
     implementation "com.android.tools.build:gradle:$rootProject.ext.gradle_version"
+    implementation 'org.json:json:20180813'
+    implementation 'commons-io:commons-io:2.11.0'
     // implementation(project(":parser"))
-    implementation("com.binlee:method.parser:1.0.0")
-}
-
-repositories {
-    maven { url(uri("${local_repo_dir}/repo")) }
-    google()
-    mavenCentral()
+    implementation("com.binlee:method.parser:1.0.1")
 }
 
 java {
@@ -20,17 +17,11 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-// 如何发布到远程仓库 https://www.jianshu.com/p/376ae605ebf1
-// 发布到本地仓库
-uploadArchives {
-    repositories.mavenDeployer {
-        // local repo
-        repository(url: uri("${local_repo_dir}/repo"))
-        // groupId
-        pom.groupId = 'com.binlee'
-        // artifactId
-        pom.artifactId = 'method.extractor'
-        // plugin version
-        pom.version = '1.0.0'
-    }
+ext {
+    NAME = 'asm 扫描字节码导出方法'
+    DESCRIPTION = 'asm 扫描字节码导出方法'
+    GROUP_ID = 'com.binlee'
+    ARTIFACT_ID = 'method.extractor'
+    VERSION = '1.0.1'
 }
+apply from: rootProject.file('scripts/publish-maven.gradle')

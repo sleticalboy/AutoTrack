@@ -1,6 +1,7 @@
 plugins {
   id 'java-library'
-  id 'maven'
+  // id 'maven'
+  id 'maven-publish'
 }
 
 dependencies {
@@ -17,17 +18,11 @@ java {
   targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-// 如何发布到远程仓库 https://www.jianshu.com/p/376ae605ebf1
-// 发布到本地仓库
-uploadArchives {
-  repositories.mavenDeployer {
-    // local repo
-    repository(url: uri("${local_repo_dir}/repo"))
-    // groupId
-    pom.groupId = 'com.binlee'
-    // artifactId
-    pom.artifactId = 'method.parser'
-    // plugin version
-    pom.version = '1.0.0'
-  }
+ext {
+  NAME = 'javadoc printer'
+  DESCRIPTION = '通过 ASM 导出所有公共方法'
+  GROUP_ID = 'com.binlee'
+  ARTIFACT_ID = 'method.parser'
+  VERSION = '1.0.1'
 }
+apply from: rootProject.file('scripts/publish-maven.gradle')

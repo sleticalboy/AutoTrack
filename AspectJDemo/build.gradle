@@ -3,18 +3,18 @@ import org.aspectj.bridge.MessageHandler
 import org.aspectj.tools.ajc.Main
 
 buildscript {
-    repositories {
-        maven {url '../repo'}
-        google()
-        jcenter()
-    }
-    // tasks
-    dependencies {
-        // 让 as 使用 ajc 作为编译器编译代码
-        classpath 'org.aspectj:aspectjtools:1.9.0'
-        // 引入自定义插件
-        // classpath "com.sleticalboy:autotrack.transform:1.0.0"
-    }
+  repositories {
+    maven { url '../repo' }
+    google()
+    mavenCentral()
+  }
+  // tasks
+  dependencies {
+    // 让 as 使用 ajc 作为编译器编译代码
+    classpath 'org.aspectj:aspectjtools:1.9.0'
+    // 引入自定义插件
+    // classpath "com.sleticalboy:autotrack.transform:1.0.0"
+  }
 }
 
 apply plugin: 'com.android.application'
@@ -24,81 +24,81 @@ apply plugin: 'kotlin-android-extensions'
 // apply plugin: 'com.sleticalboy.transform'
 
 android {
-    compileSdkVersion rootProject.ext.compile_version
-    buildToolsVersion rootProject.ext.build_version
+  compileSdkVersion rootProject.ext.compile_version
 
-    defaultConfig {
-        applicationId "com.sleticalboy.aspectj"
-        minSdkVersion rootProject.ext.min_version
-        targetSdkVersion rootProject.ext.target_version
-        versionCode 1
-        versionName "1.0"
+  defaultConfig {
+    applicationId "com.sleticalboy.aspectj"
+    minSdkVersion rootProject.ext.min_version
+    targetSdkVersion rootProject.ext.target_version
+    versionCode 1
+    versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
     }
+  }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
+  compileOptions {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+  }
+  // namespace 'com.sleticalboy.aspectj'
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation "androidx.core:core-ktx:$ktx_version"
-    implementation "androidx.constraintlayout:constraintlayout:$constraint_version"
-    implementation "com.google.android.material:material:$material_version"
-    // AspectJ
-    implementation 'org.aspectj:aspectjrt:1.9.5'
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+  implementation "androidx.appcompat:appcompat:$appcompat_version"
+  implementation "androidx.core:core-ktx:$ktx_version"
+  implementation "androidx.constraintlayout:constraintlayout:$constraint_version"
+  implementation "com.google.android.material:material:$material_version"
+  // AspectJ
+  implementation 'org.aspectj:aspectjrt:1.9.5'
 }
 
 final def tag = "AutoTrack "
 
 project.android.applicationVariants.all { it ->
-    if (!it.buildType.isDebuggable()) {
-        project.logger.warn(tag + "Skipping non-debuggable build type '${it.buildType.name}'.")
-        return
+  if (!it.buildType.isDebuggable()) {
+    project.logger.warn(tag + "Skipping non-debuggable build type '${it.buildType.name}'.")
+    return
+  }
+  project.logger.debug(tag + "Start building '${it.buildType.name}'.")
+  JavaCompile jc = it.javaCompile
+  jc.doLast {
+    final String[] args = [
+      "-showWeaveInfo", "-1.5",
+      "-inpath", jc.destinationDir.toString(),
+      "-aspectpath", jc.classpath.asPath,
+      "-d", jc.destinationDir.toString(),
+      "-classpath", jc.classpath.asPath,
+      "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator)
+    ]
+    project.logger.info(tag + "ajc args: " + Arrays.toString(args))
+    final MessageHandler handler = new MessageHandler(true)
+    new Main().run(args, handler)
+    handler.getMessages(null, true).each {
+      switch (it.kind) {
+        case IMessage.ABORT:
+        case IMessage.ERROR:
+        case IMessage.FAIL:
+          logger.error(tag + it.message, it.thrown)
+          break
+        case IMessage.WARNING:
+          logger.warn(tag + it.message, it.thrown)
+          break
+        case IMessage.INFO:
+          logger.info(tag + it.message, it.thrown)
+          break
+        case IMessage.DEBUG:
+          logger.debug(tag + it.message, it.thrown)
+          break
+      }
     }
-    project.logger.debug(tag + "Start building '${it.buildType.name}'.")
-    JavaCompile jc = it.javaCompile
-    jc.doLast {
-        final String[] args = [
-                "-showWeaveInfo", "-1.5",
-                "-inpath", jc.destinationDir.toString(),
-                "-aspectpath", jc.classpath.asPath,
-                "-d", jc.destinationDir.toString(),
-                "-classpath", jc.classpath.asPath,
-                "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator)
-        ]
-        project.logger.info(tag + "ajc args: " + Arrays.toString(args))
-        final MessageHandler handler = new MessageHandler(true)
-        new Main().run(args, handler)
-        handler.getMessages(null, true).each {
-            switch (it.kind) {
-                case IMessage.ABORT:
-                case IMessage.ERROR:
-                case IMessage.FAIL:
-                    logger.error(tag + it.message, it.thrown)
-                    break
-                case IMessage.WARNING:
-                    logger.warn(tag + it.message, it.thrown)
-                    break
-                case IMessage.INFO:
-                    logger.info(tag + it.message, it.thrown)
-                    break
-                case IMessage.DEBUG:
-                    logger.debug(tag + it.message, it.thrown)
-                    break
-            }
-        }
-    }
+  }
 }

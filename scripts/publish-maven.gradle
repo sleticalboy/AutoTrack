@@ -1,0 +1,40 @@
+
+// 如何发布到远程仓库 https://www.jianshu.com/p/376ae605ebf1
+// 发布到本地仓库
+// uploadArchives {
+//     repositories.mavenDeployer {
+//         // local repo
+//         repository(url: uri("${local_repo_dir}/repo"))
+//         // groupId
+//         pom.groupId = 'com.sleticalboy'
+//         // artifactId
+//         pom.artifactId = 'autotrack.transform'
+//         // plugin version
+//         pom.version = '1.0.0'
+//     }
+// }
+
+// 如何发布到远程仓库 https://www.jianshu.com/p/376ae605ebf1
+// 发布到本地仓库
+publishing {
+  publications {
+    maven(MavenPublication) {
+      assert it instanceof MavenPublication
+      from components.java
+      pom {
+        name = "$NAME"
+        description = "$DESCRIPTION"
+        developers {
+          developer {
+            id = 'binlee'
+            name = 'Ben'
+            email = 'sleticalboy@gmail.com'
+          }
+        }
+      }
+      groupId "$GROUP_ID"
+      artifactId "$ARTIFACT_ID"
+      version "$VERSION"
+    }
+  }
+}

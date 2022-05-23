@@ -1,6 +1,6 @@
 plugins {
   id 'java-library'
-  id 'maven'
+  id 'maven-publish'
 }
 
 java {
@@ -13,17 +13,11 @@ dependencies {
   annotationProcessor 'com.google.auto.service:auto-service:1.0'
 }
 
-// 如何发布到远程仓库 https://www.jianshu.com/p/376ae605ebf1
-// 发布到本地仓库
-uploadArchives {
-  repositories.mavenDeployer {
-    // local repo
-    repository(url: uri("${local_repo_dir}/repo"))
-    // groupId
-    pom.groupId = 'com.binlee'
-    // artifactId
-    pom.artifactId = 'javadoc.processor'
-    // plugin version
-    pom.version = '1.0.0'
-  }
+ext {
+  NAME = 'javadoc printer'
+  DESCRIPTION = '编译前打印所有的 javadoc'
+  GROUP_ID = 'com.binlee'
+  ARTIFACT_ID = 'javadoc.processor'
+  VERSION = '1.0.1'
 }
+apply from: rootProject.file('scripts/publish-maven.gradle')

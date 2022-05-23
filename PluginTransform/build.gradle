@@ -1,10 +1,15 @@
 apply plugin: 'groovy'
-apply plugin: 'maven'
+// apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
     implementation "com.android.tools.build:gradle:$rootProject.ext.gradle_version"
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'commons-codec:commons-codec:1.15'
+    implementation 'org.ow2.asm:asm:9.2'
+    implementation 'org.ow2.asm:asm-commons:9.2'
 }
 
 repositories {
@@ -17,17 +22,12 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-// 如何发布到远程仓库 https://www.jianshu.com/p/376ae605ebf1
-// 发布到本地仓库
-uploadArchives {
-    repositories.mavenDeployer {
-        // local repo
-        repository(url: uri("${local_repo_dir}/repo"))
-        // groupId
-        pom.groupId = 'com.sleticalboy'
-        // artifactId
-        pom.artifactId = 'autotrack.transform'
-        // plugin version
-        pom.version = '1.0.0'
-    }
+ext {
+    NAME = 'auto track transform'
+    DESCRIPTION = '自动埋点插件'
+    GROUP_ID = 'com.sleticalboy'
+    ARTIFACT_ID = 'autotrack.transform'
+    VERSION = '1.0.1'
 }
+
+apply from: rootProject.file('scripts/publish-maven.gradle')
