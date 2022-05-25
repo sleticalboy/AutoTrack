@@ -28,7 +28,7 @@ public class PrintDocsProcessor extends AbstractProcessor {
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if (roundEnv.processingOver()) return false;
     Log.v(TAG, "process() start with: " + annotations);
-    JavadocPrinter.print(roundEnv.getRootElements(), processingEnv.getElementUtils(), TAG);
+    JavadocPrinter.print(processingEnv, roundEnv.getRootElements(), TAG);
     return true;
   }
 }

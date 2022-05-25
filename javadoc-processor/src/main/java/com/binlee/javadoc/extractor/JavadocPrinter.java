@@ -1,5 +1,7 @@
 package com.binlee.javadoc.extractor;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.lang.management.BufferPoolMXBean;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -18,6 +21,9 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.SimpleElementVisitor8;
+import javax.tools.FileObject;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardLocation;
 
 /**
  * Created on 2022/5/18
@@ -30,10 +36,14 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
   private final String mTag;
   private final Map<String, Object> mJson;
 
-  public static void print(Set<? extends Element> elements, Elements utils, String tag) {
+  public static void print(ProcessingEnvironment env, Set<? extends Element> elements, String tag) {
     Log.e("JavadocPrinter", "print() elements: " + elements);
     if (elements == null || elements.size() == 0) return;
     for (Element e : elements) {
+      if (e.getKind() == ElementKind.ANNOTATION_TYPE) {
+        Log.w(tag, "visitType() skip annotation: " + e);
+        continue;
+      }
       Log.i("JavadocPrinter", "visit " + e + " ---> start --->");
       Log.i("JavadocPrinter", "visit " + e + " ---> start --->");
       // class info:
@@ -81,13 +91,32 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
       //  ]
       //}
       final JSONObject json = new JSONObject();
-      new JavadocPrinter(tag, utils, json).visit(e);
+      new JavadocPrinter(tag, env.getElementUtils(), json).visit(e);
+      FileObject fileObject = null;
+      try {
+        fileObject = env.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "",
+          // 类名中的泛型处理掉：com.quvideo.engine.layers.export._BaseExportManager<T,Q>
+          json.get("class").toString().replaceFirst("<.*>", "") + ".json");
+        final Writer writer = fileObject.openWriter();
+        writer.write(json.toString());
+        writer.close();
+      } catch (IOException ex) {
+        if (fileObject != null) {
+          try {
+            fileObject.delete();
+          } catch (Exception ignored) {
+          }
+        }
+        ex.printStackTrace();
+      }
       if (e.asType().toString().equals("com.quvideo.engine.layers.model.newlayer.Layer")) {
         Log.i("JavadocPrinter", "visit " + e + " ---> end ---> " + json);
       } else {
         Log.i("JavadocPrinter", "visit " + e + " ---> end ---> ");
       }
-      Log.i("JavadocPrinter", "visit " + e + " ---> end --->");
+      if (fileObject != null) {
+        Log.i("JavadocPrinter", "visit " + e + " ---> end ---> " + fileObject.toUri());
+      }
     }
   }
 
