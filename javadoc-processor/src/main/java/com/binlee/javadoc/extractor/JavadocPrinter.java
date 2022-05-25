@@ -18,6 +18,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.SimpleElementVisitor8;
@@ -37,14 +38,20 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
   private final Map<String, Object> mJson;
 
   public static void print(ProcessingEnvironment env, Set<? extends Element> elements, String tag) {
+    final Map<String, String> options = env.getOptions();
+    String[] regexes = {};
+    if (options != null) {
+      Log.setDebug(Boolean.parseBoolean(options.get("debug")));
+      final String skipClassesRegex = options.get("skip_class_regex");
+      if (skipClassesRegex != null) regexes = skipClassesRegex.split(",");
+    }
     Log.e("JavadocPrinter", "print() elements: " + elements);
     if (elements == null || elements.size() == 0) return;
     for (Element e : elements) {
-      if (e.getKind() == ElementKind.ANNOTATION_TYPE) {
-        Log.w(tag, "visitType() skip annotation: " + e);
+      if (e.getKind() == ElementKind.ANNOTATION_TYPE || shouldSkip(e, regexes)) {
+        Log.w(tag, "visitType() skip element: " + e);
         continue;
       }
-      Log.i("JavadocPrinter", "visit " + e + " ---> start --->");
       Log.i("JavadocPrinter", "visit " + e + " ---> start --->");
       // class info:
       //{
@@ -92,6 +99,28 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
       //}
       final JSONObject json = new JSONObject();
       new JavadocPrinter(tag, env.getElementUtils(), json).visit(e);
+      final JSONArray fields = (JSONArray) json.get("fields");
+      if (fields != null && fields.size() != 0) {
+        final JSONObject formattedFields = new JSONObject();
+        Object value;
+        String name;
+        for (int i = 0; i < fields.size(); i++) {
+          value = "";
+          name = null;
+          final JSONObject field = (JSONObject) fields.get(i);
+          for (String key : field.keySet()) {
+            if ("comment".equals(key) || "modifiers".equals(key)) continue;
+            if ("value".equals(key)) {
+              value = field.get(key);
+            } else {
+              name = key;
+            }
+          }
+          if (name != null) formattedFields.put(name, value);
+        }
+        Log.w(tag, "formatted fields: \n" + formattedFields);
+        json.put("formatted_fields", formattedFields);
+      }
       FileObject fileObject = null;
       try {
         fileObject = env.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "",
@@ -109,15 +138,18 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
         }
         ex.printStackTrace();
       }
-      if (e.asType().toString().equals("com.quvideo.engine.layers.model.newlayer.Layer")) {
-        Log.i("JavadocPrinter", "visit " + e + " ---> end ---> " + json);
-      } else {
-        Log.i("JavadocPrinter", "visit " + e + " ---> end ---> ");
-      }
       if (fileObject != null) {
-        Log.i("JavadocPrinter", "visit " + e + " ---> end ---> " + fileObject.toUri());
+        Log.w("JavadocPrinter", "visit " + e + " ---> end ---> " + fileObject.toUri());
       }
     }
+  }
+
+  private static boolean shouldSkip(Element e, String[] regexes) {
+    final String s = e.asType().toString();
+    for (String regex : regexes) {
+      if (s.matches(regex)) return true;
+    }
+    return false;
   }
 
   private JavadocPrinter(String tag, Elements utils, Map<String, Object> json) {
@@ -163,8 +195,12 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
     mJson.put("class", e.asType());
     // 父类及接口
     final TypeMirror superclass = e.getSuperclass();
-    mJson.put("super_class", superclass.toString());
-    buf.append(" extends ").append(superclass);
+    if (superclass.getKind() != TypeKind.NONE) {
+      mJson.put("super_class", superclass.toString());
+      buf.append(" extends ").append(superclass);
+    } else {
+      mJson.put("super_class", "");
+    }
     // 接口
     List<String> interfaceList = new ArrayList<>();
     final List<? extends TypeMirror> interfaces = e.getInterfaces();

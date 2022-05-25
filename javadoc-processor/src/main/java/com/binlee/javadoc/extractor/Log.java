@@ -14,16 +14,22 @@ public final class Log {
   private static final String WARN = "\033[33mW/%s: %s\033[0m\n";
   private static final String ERROR = "\033[31mE/%s: %s\033[0m\n";
 
+  private static boolean sDebug = false;
+
+  public static void setDebug(boolean debug) {
+    sDebug = debug;
+  }
+
   public static void v(String tag, String msg) {
-    printf(VERBOSE, tag, msg);
+    if (sDebug) printf(VERBOSE, tag, msg);
   }
 
   public static void i(String tag, String msg) {
-    printf(INFO, tag, msg);
+    if (sDebug) printf(INFO, tag, msg);
   }
 
   public static void d(String tag, String msg) {
-    printf(DEBUG, tag, msg);
+    if (sDebug) printf(DEBUG, tag, msg);
   }
 
   public static void w(String tag, String msg) {

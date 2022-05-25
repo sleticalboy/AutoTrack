@@ -1,7 +1,9 @@
 #!/usr/bin/env sh
 
-./gradlew :PluginTransform:uploadArchives --console=rich
-./gradlew clean --console=rich
+./gradlew :javadoc-processor:publishToMavenLocal --console=rich
+#./gradlew :PluginTransform:uploadArchives --console=rich
+#./gradlew clean --console=rich
+find . -name build | xargs rm -rfv
 ./gradlew :TransformDemo:assembleDebug --console=rich
 
 # launch app

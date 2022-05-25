@@ -14,7 +14,7 @@ import javax.lang.model.element.TypeElement;
 @SupportedAnnotationTypes("*")
 public class PrintDocsProcessor extends AbstractProcessor {
 
-  private static final String TAG = "PrintDocsProcessor";
+  private static final String TAG = "JavadocProc";
 
   @Override public synchronized void init(ProcessingEnvironment procEnv) {
     super.init(procEnv);

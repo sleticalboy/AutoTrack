@@ -38,7 +38,6 @@ public final class JSONObject extends LinkedHashMap<String, Object> {
       Object value = e.getValue();
       buf.append('"').append(key).append('"').append(':');
       if (value instanceof List) {
-        new JSONArray(((List<?>) value));
         buf.append(new JSONArray(((List<?>) value)));
       } else if (value instanceof Map) {
         buf.append(new JSONObject(((Map<?, ?>) value)));
