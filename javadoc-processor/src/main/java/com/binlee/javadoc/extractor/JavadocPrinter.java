@@ -1,5 +1,6 @@
 package com.binlee.javadoc.extractor;
 
+import java.lang.management.BufferPoolMXBean;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -28,7 +29,6 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
   private final Elements mUtils;
   private final String mTag;
   private final Map<String, Object> mJson;
-  private Map<String, Object> mMethod;
 
   public static void print(Set<? extends Element> elements, Elements utils, String tag) {
     Log.e("JavadocPrinter", "print() elements: " + elements);
@@ -44,11 +44,17 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
       //    'java.util.concurrent.Callable<java.util.List<java.lang.String>>',
       //    'java.util.concurrent.Future<com.sleticalboy.transform.bean.Image>',
       //    'java.lang.Runnable',
-      //  ]
+      //  ],
+      //  'fields': [
+      //    {
+      //      'comment': '节点的层级 id',
+      //      'layerId': 'float'
+      //    },
+      //  ],
       //  'constructors': [
       //    '', ...
-      //  ]
-      //  methods: [
+      //  ],
+      //  'methods': [
       //    {
       //      '创建时被调用': '//'
       //      'name': 'onCreate',
@@ -74,9 +80,13 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
       //    }
       //  ]
       //}
-      Map<String, Object> json = new LinkedHashMap<>();
+      final JSONObject json = new JSONObject();
       new JavadocPrinter(tag, utils, json).visit(e);
-      Log.i("JavadocPrinter", "visit " + e + " ---> end ---> " + json);
+      if (e.asType().toString().equals("com.quvideo.engine.layers.model.newlayer.Layer")) {
+        Log.i("JavadocPrinter", "visit " + e + " ---> end ---> " + json);
+      } else {
+        Log.i("JavadocPrinter", "visit " + e + " ---> end ---> ");
+      }
       Log.i("JavadocPrinter", "visit " + e + " ---> end --->");
     }
   }
@@ -88,28 +98,31 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
   }
 
   // 打印文档信息
-  @Override protected JavadocPrinter defaultAction(Element e, Object o) {
+  private CharSequence javadoc(Element e) {
     // Log.w(TAG, "defaultAction() -> " + e + ", kind: " + e.getKind());
     final String comment = mUtils.getDocComment(e);
     if (comment != null) {
       final StringTokenizer tokenizer = new StringTokenizer(comment, "\n\r");
       final StringBuilder buf = new StringBuilder();
-      buf.append("/**\n");
+      final StringBuilder doc = new StringBuilder();
+      buf.append("\n/**\n");
       while (tokenizer.hasMoreTokens()) {
-        buf.append(" *");
-        buf.append(tokenizer.nextToken());
-        buf.append('\n');
+        final String token = tokenizer.nextToken();
+        buf.append(" *").append(token).append('\n');
+        doc.append(token.trim()).append('/');
       }
       buf.append(" */");
       Log.i(mTag, buf.toString());
+      return doc.toString();
     }
-    return this;
+    return null;
   }
 
   @Override public JavadocPrinter visitType(TypeElement e, Object o) {
     // Log.w(TAG, "visitType() -> " + e + ", kind: " + e.getKind());
     // 类注释
-    defaultAction(e, o);
+    final CharSequence javadoc = javadoc(e);
+    mJson.put("comment", javadoc);
     final StringBuilder buf = new StringBuilder();
     // 类详细信息
     // 修饰符
@@ -123,40 +136,73 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
     final TypeMirror superclass = e.getSuperclass();
     mJson.put("super_class", superclass.toString());
     buf.append(" extends ").append(superclass);
+    // 接口
+    List<String> interfaceList = new ArrayList<>();
     final List<? extends TypeMirror> interfaces = e.getInterfaces();
     if (interfaces.size() != 0) {
       buf.append(" implements ");
-      List<String> interfaceList = new ArrayList<>();
       for (int i = 0, size = interfaces.size(); i < size; i++) {
         buf.append(interfaces.get(i));
         if (i != size - 1) buf.append(", ");
         interfaceList.add(interfaces.get(i).toString());
       }
-      mJson.put("interfaces", interfaceList);
     }
+    mJson.put("interfaces", interfaceList);
     buf.append(" {}");
     Log.w(mTag, buf.toString());
     // 类中的方法、内部类等信息
-    List<Map<String, Object>> methodList = new ArrayList<>();
     final List<? extends Element> elements = e.getEnclosedElements();
     for (Element element : elements) {
       switch (element.getKind()) {
-        // field/constructor
+        // field
+        case FIELD:
+          visitVariable((VariableElement) element, o);
+          break;
+        // constructor/method
         case CONSTRUCTOR:
         case METHOD:
-          mMethod = new HashMap<>();
           visitExecutable((ExecutableElement) element, o);
-          methodList.add(mMethod);
         default:
           break;
       }
     }
-    mJson.put("methods", methodList);
+    return this;
+  }
+
+  @Override public JavadocPrinter visitVariable(VariableElement e, Object o) {
+    final CharSequence javadoc = javadoc(e);
+    JSONArray fields = (JSONArray) mJson.get("fields");
+    if (fields == null) mJson.put("fields", fields = new JSONArray());
+    final JSONObject field = new JSONObject();
+    fields.add(field);
+    field.put("comment", javadoc);
+    StringBuilder buf = new StringBuilder();
+    // 修饰符
+    final Set<Modifier> modifiers = e.getModifiers();
+    boolean isConst = false;
+    if (modifiers != null) {
+      isConst = modifiers.contains(Modifier.STATIC) && modifiers.contains(Modifier.FINAL);
+      for (Modifier modifier : modifiers) {
+        buf.append(modifier).append(' ');
+      }
+    }
+    field.put("modifiers", buf.toString());
+    // 描述
+    buf.append(e.asType()).append(' ').append(e.getSimpleName());
+    if (isConst) buf.append(" = '").append(e.getConstantValue()).append('\'');
+    buf.append(';');
+    field.put(e.getSimpleName().toString(), e.asType());
+    field.put("value", isConst ? e.getConstantValue() : null);
+    Log.w(mTag, buf.toString());
     return this;
   }
 
   @Override public JavadocPrinter visitExecutable(ExecutableElement e, Object o) {
-    defaultAction(e, o);
+    JSONArray methods = (JSONArray) mJson.get("methods");
+    if (methods == null) mJson.put("methods", methods = new JSONArray());
+    final JSONObject method = new JSONObject();
+    final CharSequence javadoc = javadoc(e);
+    method.put("comment", javadoc);
     // 打印方法详细信息
     final StringBuilder buf = new StringBuilder();
     // 修饰符
@@ -164,32 +210,37 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
     for (Modifier modifier : modifiers) {
       buf.append(modifier).append(' ');
     }
+    method.put("modifiers", buf.toString());
     // 返回值
     if (e.getKind() == ElementKind.CONSTRUCTOR) {
       // 构造器要单独处理
       buf.append(e.getEnclosingElement().asType());
+      method.put("name", "<init>");
     } else {
       final TypeMirror returnType = e.getReturnType();
       buf.append(returnType.toString()).append(' ');
       // 方法名
       buf.append(e.getSimpleName());
-      mMethod.put("name", e.getSimpleName());
-      mMethod.put("returns", returnType.toString());
+      method.put("returns", returnType.toString());
+      method.put("name", e.getSimpleName());
     }
     // 方法参数
-    List<Map<String, Object>> paramList = new ArrayList<>();
+    // List<Map<String, Object>> paramList = new ArrayList<>();
+    JSONObject params = new JSONObject();
     buf.append('(');
     final List<? extends VariableElement> parameters = e.getParameters();
     for (int i = 0, size = parameters.size(); i < size; i++) {
-      Map<String, Object> param = new LinkedHashMap<>();
+      // Map<String, Object> param = new LinkedHashMap<>();
       final VariableElement element = parameters.get(i);
       buf.append(element.asType()).append(' ').append(element.getSimpleName());
       if (i != size - 1) buf.append(", ");
-      param.put(element.getSimpleName().toString(), element.asType());
-      paramList.add(param);
+      // param.put(element.getSimpleName().toString(), element.asType());
+      // paramList.add(param);
+      params.put(element.getSimpleName().toString(), element.asType());
     }
     buf.append(')');
-    mMethod.put("params", paramList);
+    // method.put("params", paramList);
+    method.put("params", params);
     // 异常表
     List<String> throwsList = new ArrayList<>();
     final List<? extends TypeMirror> types = e.getThrownTypes();
@@ -201,11 +252,12 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
         throwsList.add(types.get(i).toString());
       }
     }
-    mMethod.put("throws", throwsList);
+    method.put("throws", throwsList);
     // 方法体
     buf.append(" {}");
     Log.w(mTag, buf.toString());
     // Log.w(TAG, "visitExecutable() -> " + e + ", kind: " + e.getKind());
+    methods.add(method);
     return this;
   }
 }

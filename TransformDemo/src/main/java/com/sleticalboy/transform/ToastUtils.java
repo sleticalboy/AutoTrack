@@ -16,9 +16,23 @@ import java.util.Set;
  */
 public final class ToastUtils {
 
+    /** int 类型字段 */
+    private int iField;
+    /** String 类型字段 */
+    private String sField;
+    /** 泛型字段 */
+    private static List<Map<String, Object>> sGenericField;
+
     private ToastUtils() {
         throw new AssertionError();
     }
+
+    /**
+     * toast 工具类
+     *
+     * @param unused 未使用
+     */
+    private ToastUtils(Void unused) {}
 
     /**
      * 显示 toast
@@ -74,7 +88,7 @@ public final class ToastUtils {
     }
 
     /**
-     * 测试函数 e
+     * 测试函数 3
      *
      * @param unused 未使用
      * @return {@link int[]}
