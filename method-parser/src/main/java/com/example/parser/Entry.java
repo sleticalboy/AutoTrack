@@ -1,16 +1,15 @@
 package com.example.parser;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created on 2022/5/12
  *
  * @author binlee
  */
-public final class Entry extends JSONObject {
+public final class Entry extends LinkedHashMap<String, Object> {
 
   // private final Map<String, Object> mFields;
 
@@ -21,8 +20,13 @@ public final class Entry extends JSONObject {
     put("returns", returns);
   }
 
-  @Override public JSONObject put(String key, Object value) throws JSONException {
-    return key == null ? this : super.put(key, value);
+  @Override public Entry put(String key, Object value) {
+    if (key != null) super.put(key, value);
+    return this;
+  }
+
+  @Override public String toString() {
+    return Util.toString(this);
   }
 
   static Entry parse(String line) {

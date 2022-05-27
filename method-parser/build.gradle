@@ -4,10 +4,6 @@ plugins {
   id 'maven-publish'
 }
 
-dependencies {
-  implementation 'org.json:json:20180813'
-}
-
 repositories {
   google()
   mavenCentral()
