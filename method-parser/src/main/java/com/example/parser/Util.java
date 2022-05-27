@@ -9,7 +9,7 @@ import java.util.Map;
  *
  * @author binlee
  */
-final class Util {
+public final class Util {
 
   static boolean sDebug = false;
 

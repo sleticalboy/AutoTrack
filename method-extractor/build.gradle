@@ -6,7 +6,6 @@ dependencies {
     implementation gradleApi()
     implementation localGroovy()
     implementation "com.android.tools.build:gradle:$rootProject.ext.gradle_version"
-    implementation 'org.json:json:20180813'
     implementation 'commons-io:commons-io:2.11.0'
     // implementation(project(":parser"))
     implementation("com.binlee:method.parser:1.0.1")
