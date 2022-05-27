@@ -105,4 +105,12 @@ public final class ToastUtils {
     private static Void foo4() throws IOException {
         return null;
     }
+
+    public interface InnerInterfaceFoo {}
+
+    public static class InnerStaticClassFoo {}
+
+    public enum InnerEnumFoo {}
+
+    public class InnerClassFoo {}
 }

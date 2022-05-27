@@ -2,10 +2,7 @@ package com.binlee.javadoc.extractor;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.management.BufferPoolMXBean;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,7 +20,6 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.SimpleElementVisitor8;
 import javax.tools.FileObject;
-import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
 
 /**
@@ -33,11 +29,18 @@ import javax.tools.StandardLocation;
  */
 final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object> {
 
+  private static boolean sProcessing = false;
+  // private static JSONObject sJson;
+
   private final Elements mUtils;
   private final String mTag;
-  private final Map<String, Object> mJson;
+  private final JSONObject mJson;
+  private Element mParent;
 
   public static void print(ProcessingEnvironment env, Set<? extends Element> elements, String tag) {
+    if (sProcessing) return;
+    sProcessing = true;
+
     final Map<String, String> options = env.getOptions();
     String[] regexes = {};
     if (options != null) {
@@ -62,34 +65,23 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
       //    'java.util.concurrent.Future<com.sleticalboy.transform.bean.Image>',
       //    'java.lang.Runnable',
       //  ],
-      //  'fields': [
-      //    {
-      //      'comment': '节点的层级 id',
-      //      'layerId': 'float'
-      //    },
-      //  ],
+      //  'fields': {
+      //    'comment': '节点的层级 id',
+      //    'layerId': 'float'
+      //  },
       //  'constructors': [
       //    '', ...
       //  ],
       //  'methods': [
       //    {
-      //      '创建时被调用': '//'
+      //      'comment': '创建时被调用/'
       //      'name': 'onCreate',
       //      'returns': 'java.util.List<java.lang.String>[]',
-      //      'params': [
-      //        {
-      //          '状态': '//',
-      //          'savedInstanceState': 'android.os.Bundle',
-      //        },
-      //        {
-      //          '超时时长': '//',
-      //          'timeout': 'L'
-      //        },
-      //        {
-      //          '时间单位': '//',
-      //          'unit': 'java.util.concurrent.TimeUnit'
-      //        }
-      //      ],
+      //      'params': {
+      //        'android.os.Bundle savedInstanceState': '',
+      //        'long timeout': 50,
+      //        'java.util.concurrent.TimeUnit unit': '',
+      //      },
       //      'throws': [
       //        'java.util.concurrent.ExecutionException',
       //        'java.lang.InterruptedException'
@@ -98,6 +90,7 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
       //  ]
       //}
       final JSONObject json = new JSONObject();
+      // JavadocPrinter.sJson = json;
       new JavadocPrinter(tag, env.getElementUtils(), json).visit(e);
       final JSONArray fields = (JSONArray) json.get("fields");
       if (fields != null && fields.size() != 0) {
@@ -152,7 +145,7 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
     return false;
   }
 
-  private JavadocPrinter(String tag, Elements utils, Map<String, Object> json) {
+  private JavadocPrinter(String tag, Elements utils, JSONObject json) {
     mTag = tag;
     mUtils = utils;
     mJson = json;
@@ -180,7 +173,26 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
   }
 
   @Override public JavadocPrinter visitType(TypeElement e, Object o) {
-    // Log.w(TAG, "visitType() -> " + e + ", kind: " + e.getKind());
+    // Log.w(mTag, "visitType() -> " + e + ", kind: " + e.getNestingKind());
+    switch (e.getNestingKind()) {
+      case TOP_LEVEL:
+        break;
+      case MEMBER:
+        final Element parent = e.getEnclosingElement();
+        // FIXME: 2022/5/27 无限递归导致栈溢出
+        if (parent == mParent) break;
+        JSONArray nested = (JSONArray) mJson.get("nested");
+        if (nested == null) {
+          mJson.put("nested", nested = new JSONArray());
+        }
+        final JSONObject json = new JSONObject();
+        nested.add(json);
+        final JavadocPrinter visitor = new JavadocPrinter(mTag, mUtils, json).visit(e);
+        visitor.mParent = parent;
+        return this;
+      default:
+        return this;
+    }
     // 类注释
     final CharSequence javadoc = javadoc(e);
     mJson.put("comment", javadoc);
@@ -218,7 +230,31 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
     // 类中的方法、内部类等信息
     final List<? extends Element> elements = e.getEnclosedElements();
     for (Element element : elements) {
+      //   ENUM, 枚举
+      //   CLASS, 内部类
+      //   ANNOTATION_TYPE, 匿名内部类
+      //   INTERFACE, 接口
+      //   ENUM_CONSTANT, 枚举常量
+      //   FIELD, 字段
+      //   PARAMETER,
+      //   LOCAL_VARIABLE,
+      //   EXCEPTION_PARAMETER,
+      //   METHOD, 方法
+      //   CONSTRUCTOR, 构造器
+      //   STATIC_INIT, 静态代码块
+      //   INSTANCE_INIT, 构造快
+      //   TYPE_PARAMETER,
+      //   OTHER,
+      //   RESOURCE_VARIABLE,
+      //   MODULE;
       switch (element.getKind()) {
+        case ENUM:
+          // break;
+        case CLASS:
+          // break;
+        case INTERFACE:
+          visitUnknown(element, o);
+          break;
         // field
         case FIELD:
           visitVariable((VariableElement) element, o);
@@ -290,21 +326,16 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
       method.put("name", e.getSimpleName());
     }
     // 方法参数
-    // List<Map<String, Object>> paramList = new ArrayList<>();
     JSONObject params = new JSONObject();
     buf.append('(');
     final List<? extends VariableElement> parameters = e.getParameters();
     for (int i = 0, size = parameters.size(); i < size; i++) {
-      // Map<String, Object> param = new LinkedHashMap<>();
       final VariableElement element = parameters.get(i);
       buf.append(element.asType()).append(' ').append(element.getSimpleName());
       if (i != size - 1) buf.append(", ");
-      // param.put(element.getSimpleName().toString(), element.asType());
-      // paramList.add(param);
-      params.put(element.getSimpleName().toString(), element.asType());
+      params.put(element.asType() + " " + element.getSimpleName(), "");
     }
     buf.append(')');
-    // method.put("params", paramList);
     method.put("params", params);
     // 异常表
     List<String> throwsList = new ArrayList<>();
@@ -323,6 +354,17 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
     Log.w(mTag, buf.toString());
     // Log.w(TAG, "visitExecutable() -> " + e + ", kind: " + e.getKind());
     methods.add(method);
+    return this;
+  }
+
+  @Override public JavadocPrinter visitUnknown(Element e, Object o) {
+    Log.e(mTag, "visitUnknown() " + e + " " + e.getClass());
+    switch (e.getKind()) {
+      case ENUM:
+      case CLASS:
+      case INTERFACE:
+        visitType((TypeElement) e, o);
+    }
     return this;
   }
 }
