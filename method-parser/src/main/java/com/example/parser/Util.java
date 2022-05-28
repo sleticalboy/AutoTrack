@@ -30,7 +30,7 @@ public final class Util {
     final Iterator<?> it = list.iterator();
     StringBuilder sb = new StringBuilder();
     sb.append('[');
-    while(true) {
+    while (true) {
       final Object obj = it.next();
       if (obj instanceof List) {
         sb.append(Util.toString((List<?>) obj));

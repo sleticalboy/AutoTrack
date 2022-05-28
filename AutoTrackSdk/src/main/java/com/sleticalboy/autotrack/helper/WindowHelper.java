@@ -13,32 +13,32 @@ import android.view.Window;
  */
 public final class WindowHelper {
 
-    private WindowHelper() {
-        throw new AssertionError("Utility class can not be initialized");
-    }
+  private WindowHelper() {
+    throw new AssertionError("Utility class can not be initialized");
+  }
 
-    public static Window findWindow(Object obj) {
-        if (obj instanceof Window) {
-            return (Window) obj;
-        } else if (obj instanceof Dialog) {
-            return ((Dialog) obj).getWindow();
-        } else if (obj instanceof Activity) {
-            return ((Activity) obj).getWindow();
-        } else if (obj instanceof DialogFragment) {
-            return findWindow(((DialogFragment) obj).getDialog());
-        } else if (obj instanceof androidx.fragment.app.DialogFragment) {
-            return findWindow(((androidx.fragment.app.DialogFragment) obj).getDialog());
-        } else if (obj instanceof View) {
-            return findWindow(ActivityHelper.findActivity(obj));
-        }
-        return null;
+  public static Window findWindow(Object obj) {
+    if (obj instanceof Window) {
+      return (Window) obj;
+    } else if (obj instanceof Dialog) {
+      return ((Dialog) obj).getWindow();
+    } else if (obj instanceof Activity) {
+      return ((Activity) obj).getWindow();
+    } else if (obj instanceof DialogFragment) {
+      return findWindow(((DialogFragment) obj).getDialog());
+    } else if (obj instanceof androidx.fragment.app.DialogFragment) {
+      return findWindow(((androidx.fragment.app.DialogFragment) obj).getDialog());
+    } else if (obj instanceof View) {
+      return findWindow(ActivityHelper.findActivity(obj));
     }
+    return null;
+  }
 
-    public static View findDecorView(Object obj) {
-        final Window win = findWindow(obj);
-        if (win != null) {
-            return win.getDecorView();
-        }
-        return null;
+  public static View findDecorView(Object obj) {
+    final Window win = findWindow(obj);
+    if (win != null) {
+      return win.getDecorView();
     }
+    return null;
+  }
 }

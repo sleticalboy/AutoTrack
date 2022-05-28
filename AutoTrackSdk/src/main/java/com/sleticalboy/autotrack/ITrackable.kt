@@ -6,8 +6,8 @@ package com.sleticalboy.autotrack
  */
 interface ITrackable {
 
-    /**
-     * 格式化信息，便于做数据分析
-     */
-    fun format(): CharSequence
+  /**
+   * 格式化信息，便于做数据分析
+   */
+  fun format(): CharSequence
 }

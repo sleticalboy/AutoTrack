@@ -3,31 +3,31 @@ apply plugin: 'groovy'
 apply plugin: 'maven-publish'
 
 dependencies {
-    implementation gradleApi()
-    implementation localGroovy()
-    implementation "com.android.tools.build:gradle:$rootProject.ext.gradle_version"
-    implementation 'commons-io:commons-io:2.11.0'
-    implementation 'commons-codec:commons-codec:1.15'
-    implementation 'org.ow2.asm:asm:9.2'
-    implementation 'org.ow2.asm:asm-commons:9.2'
+  implementation gradleApi()
+  implementation localGroovy()
+  implementation "com.android.tools.build:gradle:$rootProject.ext.gradle_version"
+  implementation 'commons-io:commons-io:2.11.0'
+  implementation 'commons-codec:commons-codec:1.15'
+  implementation 'org.ow2.asm:asm:9.2'
+  implementation 'org.ow2.asm:asm-commons:9.2'
 }
 
 repositories {
-    google()
-    mavenCentral()
+  google()
+  mavenCentral()
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 ext {
-    NAME = 'auto track transform'
-    DESCRIPTION = '自动埋点插件'
-    GROUP_ID = 'com.sleticalboy'
-    ARTIFACT_ID = 'autotrack.transform'
-    VERSION = '1.0.1'
+  NAME = 'auto track transform'
+  DESCRIPTION = '自动埋点插件'
+  GROUP_ID = 'com.sleticalboy'
+  ARTIFACT_ID = 'autotrack.transform'
+  VERSION = '1.0.1'
 }
 
 apply from: rootProject.file('scripts/publish-maven.gradle')

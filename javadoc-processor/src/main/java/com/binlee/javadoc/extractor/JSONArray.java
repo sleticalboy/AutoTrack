@@ -38,7 +38,7 @@ public final class JSONArray extends ArrayList<Object> {
     StringBuilder buf = new StringBuilder();
     buf.append('[');
 
-    while(true) {
+    while (true) {
       Object e = it.next();
       if (e instanceof List) {
         buf.append(new JSONArray((List<?>) e));

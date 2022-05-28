@@ -8,8 +8,8 @@ import android.app.Application
  */
 open class DefaultAutoTrackApp : Application() {
 
-    override fun onCreate() {
-        super.onCreate()
-        AutoTrack.init(this)
-    }
+  override fun onCreate() {
+    super.onCreate()
+    AutoTrack.init(this)
+  }
 }

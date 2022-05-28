@@ -9,33 +9,33 @@ import android.content.pm.PackageManager;
  */
 public class KotlinTest {
 
-    private static String appVersion;
-    private static String appName;
+  private static String appVersion;
+  private static String appName;
 
-    static {
-        checkDeviceInfo();
-    }
+  static {
+    checkDeviceInfo();
+  }
 
-    public String getAppName() {
-        return appName;
-    }
+  public String getAppName() {
+    return appName;
+  }
 
-    public String getAppVersion() {
-        return appVersion;
-    }
+  public String getAppVersion() {
+    return appVersion;
+  }
 
-    private static void checkDeviceInfo() {
-        if (appName == null && AutoTrack.sharedApp() != null) {
-            try {
-                appVersion = AutoTrack.sharedApp().getPackageManager()
-                        .getPackageInfo(AutoTrack.sharedApp().getPackageName(), 0).versionName;
-            } catch (PackageManager.NameNotFoundException e) {
-                appVersion = "Unknown";
-            }
-        }
-        if (appName == null && AutoTrack.sharedApp() != null) {
-            final int label = AutoTrack.sharedApp().getApplicationInfo().labelRes;
-            appName = AutoTrack.sharedApp().getString(label);
-        }
+  private static void checkDeviceInfo() {
+    if (appName == null && AutoTrack.sharedApp() != null) {
+      try {
+        appVersion = AutoTrack.sharedApp().getPackageManager()
+          .getPackageInfo(AutoTrack.sharedApp().getPackageName(), 0).versionName;
+      } catch (PackageManager.NameNotFoundException e) {
+        appVersion = "Unknown";
+      }
     }
+    if (appName == null && AutoTrack.sharedApp() != null) {
+      final int label = AutoTrack.sharedApp().getApplicationInfo().labelRes;
+      appName = AutoTrack.sharedApp().getString(label);
+    }
+  }
 }

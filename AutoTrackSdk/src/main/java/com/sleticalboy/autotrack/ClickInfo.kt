@@ -2,9 +2,9 @@ package com.sleticalboy.autotrack
 
 abstract class ClickInfo : BaseTrackInfo() {
 
-    override fun label(): CharSequence = desc() ?: ""
+  override fun label(): CharSequence = desc() ?: ""
 
-    abstract fun desc(): CharSequence?
+  abstract fun desc(): CharSequence?
 
-    override fun type(): CharSequence = "WidgetClick"
+  override fun type(): CharSequence = "WidgetClick"
 }

@@ -1,5 +1,5 @@
 package com.sleticalboy.autotrack.plugin
 
 class AutoTrackPluginConfig {
-    boolean debug = false
+  boolean debug = false
 }

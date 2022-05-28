@@ -3,20 +3,20 @@ apply plugin: 'groovy'
 apply plugin: 'maven-publish'
 
 dependencies {
-    implementation gradleApi()
-    implementation localGroovy()
+  implementation gradleApi()
+  implementation localGroovy()
 }
 
 repositories {
-    google()
-    mavenCentral()
+  google()
+  mavenCentral()
 }
 
 ext {
-    NAME = 'auto track transform'
-    DESCRIPTION = '自动埋点插件'
-    GROUP_ID = 'com.sleticalboy'
-    ARTIFACT_ID = 'autotrack.android'
-    VERSION = '1.0.1'
+  NAME = 'auto track transform'
+  DESCRIPTION = '自动埋点插件'
+  GROUP_ID = 'com.sleticalboy'
+  ARTIFACT_ID = 'autotrack.android'
+  VERSION = '1.0.1'
 }
 apply from: rootProject.file('scripts/publish-maven.gradle')

@@ -11,9 +11,9 @@ import javax.lang.model.util.Elements;
  */
 public final class Util {
 
-    private Util() {
-        //no instance
-    }
+  private Util() {
+    //no instance
+  }
 
   static boolean shouldSkip(Element e, String[] regexes) {
     final String s = e.asType().toString();

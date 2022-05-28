@@ -5,7 +5,6 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -91,7 +90,8 @@ final class JavadocPrinter extends SimpleElementVisitor8<JavadocPrinter, Object>
       ex.printStackTrace();
     }
     if (fileObject != null) {
-      Log.w("JavadocPrinter", "visit " + mJson.get("class") + " ---> end ---> " + fileObject.toUri());
+      Log.w("JavadocPrinter",
+        "visit " + mJson.get("class") + " ---> end ---> " + fileObject.toUri());
     }
   }
 

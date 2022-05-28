@@ -1,27 +1,27 @@
 <menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.sleticalboy.transform.MainActivity">
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  tools:context="com.sleticalboy.transform.MainActivity">
+  <item
+    android:id="@+id/action_settings"
+    android:orderInCategory="100"
+    android:title="@string/action_settings"
+    app:showAsAction="never" />
 
-    <item
-        android:id="@+id/list_view"
-        android:title="@string/menu_list_view" />
+  <item
+    android:id="@+id/list_view"
+    android:title="@string/menu_list_view" />
 
-    <item
-        android:id="@+id/grid_view"
-        android:title="@string/menu_grid_view" />
+  <item
+    android:id="@+id/grid_view"
+    android:title="@string/menu_grid_view" />
 
-    <item
-        android:id="@+id/track_demo"
-        android:title="@string/track_demo" />
+  <item
+    android:id="@+id/track_demo"
+    android:title="@string/track_demo" />
 
-    <item
-        android:id="@+id/recycler_view"
-        android:title="@string/recycler_view" />
+  <item
+    android:id="@+id/recycler_view"
+    android:title="@string/recycler_view" />
 </menu>

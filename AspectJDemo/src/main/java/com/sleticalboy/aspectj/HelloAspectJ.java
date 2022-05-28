@@ -9,11 +9,11 @@ import android.view.View;
  */
 public class HelloAspectJ {
 
-    private HelloAspectJ() {
-        throw new AssertionError();
-    }
+  private HelloAspectJ() {
+    throw new AssertionError();
+  }
 
-    public static String helloAspectJ(View view) {
-        return "Hello AspectJ " + view.getClass().getSimpleName();
-    }
+  public static String helloAspectJ(View view) {
+    return "Hello AspectJ " + view.getClass().getSimpleName();
+  }
 }

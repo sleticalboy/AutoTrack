@@ -8,14 +8,14 @@ import com.sleticalboy.autotrack.ITrackable
  * @author leebin
  */
 data class Image(
-    var uri: Uri?,
-    var desc: String,
-    var res: Int?
+  var uri: Uri?,
+  var desc: String,
+  var res: Int?
 ) : ITrackable {
 
-    override fun format(): CharSequence {
-        return "Image(uri=$uri, desc='$desc', res=$res)"
-    }
+  override fun format(): CharSequence {
+    return "Image(uri=$uri, desc='$desc', res=$res)"
+  }
 
-    override fun toString(): String = format().toString()
+  override fun toString(): String = format().toString()
 }

@@ -41,7 +41,7 @@ public abstract class BaseMethodRecorder {
     Pattern.compile(".*io/reactivex/.*"),
     Pattern.compile(".*retrofit2?/"),
     Pattern.compile(".*okhttp3?/")
-    ));
+  ));
   private final Set<String> mRecordedMethods = new HashSet<>();
   private File mFile;
   private boolean hasConfigured = false;

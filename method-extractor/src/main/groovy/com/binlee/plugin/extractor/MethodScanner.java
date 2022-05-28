@@ -18,40 +18,40 @@ import org.objectweb.asm.ClassWriter;
  */
 public final class MethodScanner {
 
-    static void scanClass(File clsFile) {
-        try {
-            final byte[] srcClsBytes = IOUtils.toByteArray(new FileInputStream(clsFile));
+  static void scanClass(File clsFile) {
+    try {
+      final byte[] srcClsBytes = IOUtils.toByteArray(new FileInputStream(clsFile));
+      scanInternal(srcClsBytes);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  static void scanJar(File jar) {
+    try {
+      final JarFile jarFile = new JarFile(jar);
+      final Enumeration<JarEntry> entries = jarFile.entries();
+      while (entries.hasMoreElements()) {
+        final JarEntry jarEntry = entries.nextElement();
+        final InputStream is = jarFile.getInputStream(jarEntry);
+        final byte[] srcClsBytes = IOUtils.toByteArray(is);
+        if (jarEntry.getName().endsWith(".class")) {
+          String clsName = jarEntry.getName().replace("/", ".").replace(".class", "");
+          if (Utils.includes(clsName)) {
             scanInternal(srcClsBytes);
-        } catch (IOException e) {
-            e.printStackTrace();
+          }
         }
+      }
+      jarFile.close();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+  }
 
-    static void scanJar(File jar) {
-        try {
-            final JarFile jarFile = new JarFile(jar);
-            final Enumeration<JarEntry> entries = jarFile.entries();
-            while (entries.hasMoreElements()) {
-                final JarEntry jarEntry = entries.nextElement();
-                final InputStream is = jarFile.getInputStream(jarEntry);
-                final byte[] srcClsBytes = IOUtils.toByteArray(is);
-                if (jarEntry.getName().endsWith(".class")) {
-                    String clsName = jarEntry.getName().replace("/", ".").replace(".class", "");
-                    if (Utils.includes(clsName)) {
-                        scanInternal(srcClsBytes);
-                    }
-                }
-            }
-            jarFile.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void scanInternal(byte[] src) {
-        new ClassReader(src)
-          .accept(new MethodExtractClassVisitor(new ClassWriter(ClassWriter.COMPUTE_MAXS)),
-            ClassReader.EXPAND_FRAMES
-          );
-    }
+  private static void scanInternal(byte[] src) {
+    new ClassReader(src)
+      .accept(new MethodExtractClassVisitor(new ClassWriter(ClassWriter.COMPUTE_MAXS)),
+        ClassReader.EXPAND_FRAMES
+      );
+  }
 }
