@@ -12,6 +12,45 @@ import java.util.Map;
  */
 public final class JSONObject extends LinkedHashMap<String, Object> {
 
+  // class info:
+  //{
+  //  'class': 'com.sleticalboy.transform.ToastUtils',
+  //  'super_class': 'java.lang.Object',
+  //  'interfaces': [
+  //    'java.util.concurrent.Callable<java.util.List<java.lang.String>>',
+  //    'java.util.concurrent.Future<com.sleticalboy.transform.bean.Image>',
+  //    'java.lang.Runnable',
+  //  ],
+  //  'fields': {
+  //    'comment': '节点的层级 id',
+  //    'layerId': 'float'
+  //  },
+  //  'constructors': [
+  //    '', ...
+  //  ],
+  //  'methods': [
+  //    {
+  //      'comment': '创建时被调用/'
+  //      'name': 'onCreate',
+  //      'returns': 'java.util.List<java.lang.String>[]',
+  //      'params': {
+  //        'android.os.Bundle savedInstanceState': '',
+  //        'long timeout': 50,
+  //        'java.util.concurrent.TimeUnit unit': '',
+  //      },
+  //      'throws': [
+  //        'java.util.concurrent.ExecutionException',
+  //        'java.lang.InterruptedException'
+  //      ]
+  //    }
+  //  ],
+  //  'simple_fields': {},
+  //  'nested': [
+  //    {},
+  //    {}
+  //  ],
+  //}
+
   public JSONObject() {
   }
 
@@ -20,6 +59,14 @@ public final class JSONObject extends LinkedHashMap<String, Object> {
     for (Map.Entry<?, ?> entry : copyFrom.entrySet()) {
       put(String.valueOf(entry.getKey()), entry.getValue());
     }
+  }
+
+  public JSONObject getJSONObject(Object key) {
+    return (JSONObject) super.get(key);
+  }
+
+  public JSONArray getJSONArray(Object key) {
+    return (JSONArray) super.get(key);
   }
 
   @Override public String toString() {

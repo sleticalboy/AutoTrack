@@ -1,6 +1,7 @@
 package com.sleticalboy.transform;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 import java.io.IOException;
 import java.util.List;
@@ -106,11 +107,23 @@ public final class ToastUtils {
         return null;
     }
 
-    public interface InnerInterfaceFoo {}
+    public interface InnerInterfaceFoo extends Runnable {}
 
-    public static class InnerStaticClassFoo {}
+    public static class InnerStaticClassFoo implements InnerInterfaceFoo {
+        @Override public void run() {
+        }
+    }
 
-    public enum InnerEnumFoo {}
+    public enum InnerEnumFoo {
+        Tom, Jack, Mary
+    }
 
-    public class InnerClassFoo {}
+    public class InnerClassFoo extends InnerStaticClassFoo {
+        InnerClassFoo() {
+        }
+
+        void foo() {
+            Log.d("ToastUtils", "foo() " + sField);
+        }
+    }
 }

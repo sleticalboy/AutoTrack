@@ -20,6 +20,14 @@ public final class JSONArray extends ArrayList<Object> {
     addAll(copyFrom);
   }
 
+  public JSONObject getJSONObject(int index) {
+    return (JSONObject) super.get(index);
+  }
+
+  public JSONArray getJSONArray(int index) {
+    return (JSONArray) super.get(index);
+  }
+
   @Override public String toString() {
     // ['value1', 'value2']
     // [{}, {}, {}]
